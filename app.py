@@ -77,43 +77,53 @@ def load_css():
         background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.03) 100%);
         backdrop-filter: blur(8px);
         mix-blend-mode: screen;
+        will-change: transform, opacity;
     }
 
+    /* Larger, faster, multi-layered animated blobs for a more eye-catching liquid effect */
     .liquid-bg::before, .liquid-bg::after{
         content:"";
         position:absolute;
-        width:120vmax;
-        height:120vmax;
+        width:130vmax;
+        height:130vmax;
         left:50%;
         top:50%;
         transform:translate(-50%,-50%);
-        background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0.00) 35%), radial-gradient(circle at 70% 70%, rgba(255,255,255,0.04), rgba(255,255,255,0.00) 30%);
-        filter: blur(60px) saturate(120%);
-        animation: floaty 18s ease-in-out infinite;
-        opacity:0.9;
+        background: radial-gradient(circle at 25% 30%, rgba(255,255,255,0.08), rgba(255,255,255,0.00) 35%), radial-gradient(circle at 70% 70%, rgba(255,255,255,0.06), rgba(255,255,255,0.00) 30%);
+        filter: blur(80px) saturate(130%);
+        animation: floatyFast 8s ease-in-out infinite;
+        opacity:0.95;
+        mix-blend-mode: screen;
     }
 
     .liquid-bg::after{
-        background: radial-gradient(circle at 40% 60%, rgba(255,255,255,0.04), rgba(255,255,255,0.00) 30%), radial-gradient(circle at 60% 30%, rgba(255,255,255,0.05), rgba(255,255,255,0.00) 30%);
-        animation-duration: 22s;
-        transform: translate(-52%,-48%);
-        opacity:0.8;
+        background: radial-gradient(circle at 40% 60%, rgba(255,255,255,0.06), rgba(255,255,255,0.00) 30%), radial-gradient(circle at 60% 30%, rgba(255,255,255,0.07), rgba(255,255,255,0.00) 30%);
+        animation-duration: 10s;
+        transform: translate(-52%,-48%) scale(1.02);
+        opacity:0.92;
+        filter: blur(90px) saturate(140%);
     }
 
-    @keyframes floaty{
-        0% { transform: translate(-50%,-50%) scale(1) rotate(0deg); }
-        50% { transform: translate(-48%,-52%) scale(1.06) rotate(6deg); }
-        100% { transform: translate(-50%,-50%) scale(1) rotate(0deg); }
+    /* extra transient layer for subtle ripples */
+    .liquid-bg::marker{ /* fallback pseudo-element name, some browsers ignore; we use an overlay div instead in DOM if needed */ }
+
+    @keyframes floatyFast{
+        0% { transform: translate(-50%,-50%) scale(1) rotate(0deg); opacity:0.95 }
+        25% { transform: translate(-46%,-54%) scale(1.08) rotate(3deg); opacity:1 }
+        50% { transform: translate(-50%,-50%) scale(1.12) rotate(6deg); opacity:0.96 }
+        75% { transform: translate(-54%,-46%) scale(1.06) rotate(-3deg); opacity:1 }
+        100% { transform: translate(-50%,-50%) scale(1) rotate(0deg); opacity:0.95 }
     }
 
-    /* subtle moving glass sheen overlay */
+    /* subtle moving glass sheen overlay with faster sweep and soft pulses */
     .glass-sheen{
         position:fixed; inset:0; z-index:1; pointer-events:none; mix-blend-mode:overlay;
-        background: linear-gradient(120deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.01) 100%);
-        animation: sheen 10s linear infinite;
-        opacity:0.9;
+        background: linear-gradient(120deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.01) 100%);
+        animation: sheen 6s linear infinite, sheenPulse 5.8s ease-in-out infinite;
+        opacity:0.98;
     }
     @keyframes sheen { from {background-position:0% 50%;} to {background-position:100% 50%;} }
+    @keyframes sheenPulse { 0% { opacity:0.92 } 50% { opacity:1 } 100% { opacity:0.92 } }
 
     /* PROFESSIONAL HEADER - bigger, bold, with 'glasses' icon */
     .professional-header{
@@ -224,10 +234,7 @@ def main():
     load_css()
 
     # MAIN CONTENT CARD
-    st.markdown('<div class="professional-card">', unsafe_allow_html=True)
-
-    # PROFESSIONAL BADGE
-    st.markdown('<div class="professional-badge">🎯 AI DIAGNOSTIC TOOL v3.0</div>', unsafe_allow_html=True)
+    st.markdown('<div class="professional-card">', unsafe_allow_html=True)\n    # PROFESSIONAL BADGE + HELP BUTTON\n    col_badge, col_help = st.columns([6,1])\n    with col_badge:\n        st.markdown('<div class="professional-badge">🎯 AI DIAGNOSTIC TOOL v3.0</div>', unsafe_allow_html=True)\n    with col_help:\n        if 'show_help' not in st.session_state:\n            st.session_state.show_help = False\n        if st.button('❓ Help'):\n            st.session_state.show_help = not st.session_state.show_help\n\n    # Show step-by-step help when toggled (Hindi + English mix, simple)\n    if st.session_state.get('show_help'):\n        with st.expander('How to use — Step by step (Hindi + English)', expanded=True):\n            st.markdown('''\n            1. **Fields bharna / Fill inputs:** Har field mein numeric value daalo (example: GLUCOSE: 120).\n            2. **Launch AI Analysis:** "🚀 LAUNCH AI ANALYSIS" button dabao — AI turant result dega.\n            3. **Result padhna / Read result:** Result bataega agar patient **IS diabetic** ya **NOT diabetic** aur ek risk% degi.\n            4. **Confidence aur recommendations:** Agar model confident hai to "Model confidence" show hoga; agar positive ho to medical recommendations dikhengi.\n            5. **Batch CSV:** Agar aapke paas multiple patients hain, CSV upload karo (columns order same rakho) aur "Run Batch Analysis" dabao.\n            6. **Download results:** Har result ke liye CSV download button milega.\n            7. **History dekho:** "📚 Analysis History" expander mein past runs dekh sakte ho.\n            8. **Support chahiye?:** Agar samajh na aaye to "Contact / Support" add karna ho to batao — main add kar dunga.\n            ''')\n
 
     # MAIN TITLE (big, bold)
     st.markdown('<div class="professional-title">DIABETES RISK ASSESSMENT</div>', unsafe_allow_html=True)
