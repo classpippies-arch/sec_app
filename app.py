@@ -24,34 +24,34 @@ def diabetes_prediction(input_data):
     return "NOT diabetic" if pred[0] == 0 else "IS diabetic", risk_percentage
 
 
-# ---------- PERFECTLY MATCHED UI CSS --------------
+# ---------- SMOOTH ANIMATED UI CSS --------------
 def load_css():
     st.markdown("""
     <style>
 
-    /* GRADIENT BACKGROUND */
+    /* ANIMATED GRADIENT BACKGROUND */
     .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%) !important;
-        background-size: 400% 400%;
-        animation: gradientShift 20s ease infinite;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab, #667eea, #764ba2, #f093fb, #f5576c) !important;
+        background-size: 400% 400% !important;
+        animation: gradient 15s ease infinite !important;
+        font-family: 'Inter', 'Segoe UI', sans-serif !important;
     }
     
-    @keyframes gradientShift {
+    @keyframes gradient {
         0% { background-position: 0% 50% }
         50% { background-position: 100% 50% }
         100% { background-position: 0% 50% }
     }
 
     /* GLASS HEADER */
-    .perfect-header {
+    .smooth-header {
         position: fixed;
         top: 0; left: 0;
         width: 100%;
-        background: rgba(255,255,255,0.12);
-        backdrop-filter: blur(25px);
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(30px);
         padding: 18px 30px;
-        border-bottom: 1px solid rgba(255,255,255,0.2);
+        border-bottom: 1px solid rgba(255,255,255,0.15);
         z-index: 100;
         display: flex;
         justify-content: space-between;
@@ -62,15 +62,15 @@ def load_css():
     }
 
     /* GLASS SIDEBAR */
-    .perfect-sidebar {
+    .smooth-sidebar {
         position: fixed;
         top: 70px;
         left: 15px;
         width: 70px;
         height: calc(100% - 100px);
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(255,255,255,0.15);
         padding-top: 30px;
         text-align: center;
         z-index: 90;
@@ -78,7 +78,7 @@ def load_css():
         box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     }
 
-    .perfect-sidebar div { 
+    .smooth-sidebar div { 
         margin: 25px 0; 
         font-size: 22px;
         color: white;
@@ -86,85 +86,75 @@ def load_css():
         transition: all 0.3s ease;
     }
     
-    .perfect-sidebar div:hover { 
+    .smooth-sidebar div:hover { 
         transform: scale(1.2);
         color: #ffd700;
     }
 
-    /* ANIMATED BLOBS */
-    .perfect-blob-1 {
+    /* FLOATING PARTICLES BACKGROUND */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+    
+    .particle {
         position: absolute;
-        top: -100px;
-        right: -80px;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, #ff0080 0%, transparent 70%);
-        filter: blur(50px);
+        background: rgba(255,255,255,0.1);
         border-radius: 50%;
-        animation: float1 15s infinite ease-in-out;
-        z-index: 1;
+        animation: floatParticle 20s infinite linear;
     }
     
-    .perfect-blob-2 {
-        position: absolute;
-        bottom: -120px;
-        left: -100px;
-        width: 350px;
-        height: 350px;
-        background: radial-gradient(circle, #4facfe 0%, transparent 70%);
-        filter: blur(60px);
-        border-radius: 50%;
-        animation: float2 12s infinite ease-in-out;
-        z-index: 1;
-    }
-    
-    @keyframes float1 {
-        0% { transform: translate(0,0) scale(1); }
-        50% { transform: translate(-40px,30px) scale(1.1); }
-        100% { transform: translate(0,0) scale(1); }
-    }
-    
-    @keyframes float2 {
-        0% { transform: translate(0,0) scale(1); }
-        50% { transform: translate(30px,-40px) scale(0.9); }
-        100% { transform: translate(0,0) scale(1); }
+    @keyframes floatParticle {
+        0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+        10% { opacity: 0.7; }
+        90% { opacity: 0.7; }
+        100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
     }
 
     /* MAIN GLASS CARD */
-    .perfect-card {
+    .smooth-card {
         margin: 100px auto;
         margin-left: 110px;
         width: 72%;
-        background: rgba(255,255,255,0.12);
-        backdrop-filter: blur(35px);
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(40px);
         border-radius: 25px;
         padding: 45px;
-        border: 1px solid rgba(255,255,255,0.25);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 
+            0 25px 50px rgba(0,0,0,0.25),
+            inset 0 1px 0 rgba(255,255,255,0.1);
         position: relative;
         overflow: hidden;
+        z-index: 2;
     }
 
-    /* BADGE - MATCHING THEME */
-    .perfect-badge {
+    /* SMOOTH BADGE */
+    .smooth-badge {
         position: relative;
         z-index: 2;
         padding: 12px 24px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
         color: white;
         border-radius: 15px;
         font-weight: 800;
         display: inline-block;
         margin-bottom: 25px;
         font-size: 16px;
-        box-shadow: 0 8px 30px rgba(102,126,234,0.4);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         border: 1px solid rgba(255,255,255,0.3);
         text-transform: uppercase;
         letter-spacing: 1.5px;
         text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
     }
 
-    .perfect-title {
+    .smooth-title {
         font-size: 38px;
         font-weight: 900;
         z-index: 2; 
@@ -173,9 +163,12 @@ def load_css():
         margin-bottom: 10px;
         text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
         text-align: center;
+        background: linear-gradient(135deg, #ffffff, #e0e0e0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
-    .perfect-sub {
+    .smooth-sub {
         color: rgba(255,255,255,0.9);
         margin-bottom: 35px;
         z-index: 2; 
@@ -188,7 +181,7 @@ def load_css():
     }
 
     /* FORM GRID */
-    .perfect-grid {
+    .smooth-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 22px 28px;
@@ -197,31 +190,32 @@ def load_css():
         margin-bottom: 30px;
     }
 
-    /* PERFECT INPUT BOXES - MATCHING BACKGROUND */
+    /* SMOOTH GLASS INPUT BOXES */
     .stTextInput > div > div {
-        background: linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3), rgba(240,147,251,0.3)) !important;
-        backdrop-filter: blur(15px) !important;
-        border: 2px solid rgba(255,255,255,0.4) !important;
-        border-radius: 18px !important;
-        padding: 6px !important;
-        transition: all 0.4s ease !important;
+        background: rgba(255,255,255,0.05) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1.5px solid rgba(255,255,255,0.2) !important;
+        border-radius: 16px !important;
+        padding: 8px !important;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
         box-shadow: 
-            0 8px 25px rgba(0,0,0,0.15),
-            inset 0 1px 0 rgba(255,255,255,0.2) !important;
+            inset 0 2px 4px rgba(255,255,255,0.1),
+            0 8px 25px rgba(0,0,0,0.15) !important;
     }
 
     .stTextInput > div > div:hover {
-        border-color: rgba(255,255,255,0.7) !important;
+        background: rgba(255,255,255,0.08) !important;
+        border-color: rgba(255,255,255,0.4) !important;
         box-shadow: 
-            0 12px 35px rgba(0,0,0,0.2),
-            inset 0 1px 0 rgba(255,255,255,0.3) !important;
+            inset 0 2px 8px rgba(255,255,255,0.15),
+            0 12px 35px rgba(0,0,0,0.2) !important;
         transform: translateY(-2px);
     }
 
     .stTextInput > div > div > input {
         background: transparent !important;
         border: none !important;
-        border-radius: 14px !important;
+        border-radius: 12px !important;
         padding: 16px 20px !important;
         font-size: 16px !important;
         font-weight: 600 !important;
@@ -230,7 +224,7 @@ def load_css():
     }
     
     .stTextInput > div > div > input::placeholder {
-        color: rgba(255,255,255,0.7) !important;
+        color: rgba(255,255,255,0.6) !important;
         font-weight: 500 !important;
         font-size: 15px !important;
     }
@@ -238,122 +232,146 @@ def load_css():
     .stTextInput > div > div > input:focus {
         outline: none !important;
         box-shadow: 
-            0 0 0 3px rgba(255,255,255,0.3),
-            inset 0 2px 8px rgba(255,255,255,0.1) !important;
-        background: rgba(255,255,255,0.15) !important;
+            inset 0 0 0 2px rgba(255,255,255,0.3),
+            0 0 20px rgba(255,255,255,0.2) !important;
+        background: rgba(255,255,255,0.1) !important;
     }
 
-    /* PERFECT INPUT LABELS */
+    /* SMOOTH INPUT LABELS */
     .stTextInput label {
-        font-weight: 800 !important;
-        color: white !important;
+        font-weight: 700 !important;
+        color: rgba(255,255,255,0.95) !important;
         margin-bottom: 12px !important;
         font-size: 15px !important;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.4) !important;
-        background: linear-gradient(135deg, #ffffff, #ffd700);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.4) !important;
+        letter-spacing: 0.3px;
         display: block;
         padding-left: 8px;
+        transition: all 0.3s ease;
     }
 
-    /* BUTTON MATCHING THEME */
+    /* SMOOTH SELECT BOXES */
+    .stSelectbox > div > div {
+        background: rgba(255,255,255,0.05) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1.5px solid rgba(255,255,255,0.2) !important;
+        border-radius: 16px !important;
+        padding: 4px !important;
+        transition: all 0.4s ease !important;
+        box-shadow: 
+            inset 0 2px 4px rgba(255,255,255,0.1),
+            0 8px 25px rgba(0,0,0,0.15) !important;
+    }
+
+    .stSelectbox > div > div:hover {
+        background: rgba(255,255,255,0.08) !important;
+        border-color: rgba(255,255,255,0.4) !important;
+        box-shadow: 
+            inset 0 2px 8px rgba(255,255,255,0.15),
+            0 12px 35px rgba(0,0,0,0.2) !important;
+        transform: translateY(-2px);
+    }
+
+    .stSelectbox > div > div > div {
+        color: white !important;
+        font-weight: 600 !important;
+        padding: 12px 16px !important;
+    }
+
+    .stSelectbox label {
+        font-weight: 700 !important;
+        color: rgba(255,255,255,0.95) !important;
+        margin-bottom: 12px !important;
+        font-size: 15px !important;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.4) !important;
+        letter-spacing: 0.3px;
+    }
+
+    /* SMOOTH BUTTON */
     .stButton > button {
-        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
-        background-size: 200% 200%;
-        animation: gradientShift 3s ease infinite;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+        backdrop-filter: blur(20px);
         padding: 18px 32px;
         width: 100%;
         border-radius: 18px;
         color: white;
         font-weight: 800;
-        border: none;
+        border: 1px solid rgba(255,255,255,0.3);
         font-size: 18px;
-        transition: all 0.4s ease;
-        box-shadow: 0 12px 35px rgba(102,126,234,0.4);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 
+            0 12px 35px rgba(0,0,0,0.2),
+            inset 0 1px 0 rgba(255,255,255,0.2);
         text-transform: uppercase;
         letter-spacing: 1.2px;
         margin-top: 20px;
         text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
     }
     
     .stButton > button:hover {
         transform: translateY(-3px);
-        box-shadow: 0 20px 45px rgba(102,126,234,0.6);
-        background: linear-gradient(135deg, #764ba2, #f093fb, #667eea);
+        box-shadow: 
+            0 20px 45px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.3);
+        background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
+        border-color: rgba(255,255,255,0.5);
+    }
+    
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.8s;
+    }
+    
+    .stButton > button:hover::before {
+        left: 100%;
     }
 
-    /* RISK METER STYLING */
-    .risk-meter {
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(20px);
-        border-radius: 18px;
-        padding: 30px;
-        margin: 25px 0;
-        border: 1px solid rgba(255,255,255,0.25);
-        text-align: center;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    /* SMOOTH EXPANDER */
+    .streamlit-expanderHeader {
+        background: rgba(255,255,255,0.05) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1.5px solid rgba(255,255,255,0.2) !important;
+        border-radius: 16px !important;
+        color: white !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        padding: 16px 20px !important;
+        transition: all 0.4s ease !important;
+        box-shadow: 
+            inset 0 2px 4px rgba(255,255,255,0.1),
+            0 8px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    .streamlit-expanderHeader:hover {
+        background: rgba(255,255,255,0.08) !important;
+        border-color: rgba(255,255,255,0.4) !important;
+        transform: translateY(-2px);
+        box-shadow: 
+            inset 0 2px 8px rgba(255,255,255,0.15),
+            0 12px 35px rgba(0,0,0,0.2) !important;
     }
 
-    .risk-title {
-        font-size: 26px;
-        font-weight: 800;
-        color: white;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    .streamlit-expanderContent {
+        background: rgba(255,255,255,0.03) !important;
+        backdrop-filter: blur(20px) !important;
+        border-radius: 0 0 16px 16px !important;
+        border: 1.5px solid rgba(255,255,255,0.2) !important;
+        border-top: none !important;
+        box-shadow: 
+            inset 0 2px 4px rgba(255,255,255,0.05),
+            0 8px 25px rgba(0,0,0,0.1) !important;
     }
 
-    .risk-value {
-        font-size: 46px;
-        font-weight: 900;
-        color: #ffd700;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
-        margin: 20px 0;
-    }
-
-    /* STATS GRID */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-        margin: 30px 0;
-    }
-
-    .stat-card {
-        background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25));
-        backdrop-filter: blur(15px);
-        border-radius: 15px;
-        padding: 22px;
-        text-align: center;
-        border: 1px solid rgba(255,255,255,0.25);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        transition: transform 0.3s ease;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .stat-value {
-        font-size: 30px;
-        font-weight: 900;
-        color: #ffd700;
-        margin-bottom: 8px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-    }
-
-    .stat-label {
-        font-size: 13px;
-        color: rgba(255,255,255,0.9);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    /* PERFECT FOOTER */
-    .perfect-footer {
+    /* SMOOTH FOOTER */
+    .smooth-footer {
         text-align: center;
         margin-top: 45px;
         color: rgba(255,255,255,0.9);
@@ -363,15 +381,17 @@ def load_css():
         text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
         font-weight: 600;
         padding: 25px;
-        background: rgba(255,255,255,0.12);
-        backdrop-filter: blur(20px);
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(25px);
         border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.25);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 
+            0 10px 30px rgba(0,0,0,0.2),
+            inset 0 1px 0 rgba(255,255,255,0.1);
     }
 
-    .perfect-footer b {
-        background: linear-gradient(135deg, #ffd700, #ffa500, #ff8c00);
+    .smooth-footer b {
+        background: linear-gradient(135deg, #ffd700, #ffa500);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 900;
@@ -379,122 +399,108 @@ def load_css():
         text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
 
-    /* EXPANDER STYLING */
-    .streamlit-expanderHeader {
-        background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)) !important;
-        backdrop-filter: blur(15px) !important;
-        border: 1px solid rgba(255,255,255,0.3) !important;
-        border-radius: 15px !important;
-        color: white !important;
-        font-weight: 700 !important;
-        font-size: 16px !important;
-    }
-
-    .streamlit-expanderContent {
-        background: rgba(255,255,255,0.08) !important;
-        backdrop-filter: blur(15px) !important;
-        border-radius: 0 0 15px 15px !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        border-top: none !important;
-    }
-
-    /* SELECT BOX STYLING */
-    .stSelectbox > div > div {
-        background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)) !important;
-        backdrop-filter: blur(15px) !important;
-        border: 2px solid rgba(255,255,255,0.4) !important;
-        border-radius: 15px !important;
-    }
-
-    .stSelectbox > div > div > div {
-        color: white !important;
-        font-weight: 600 !important;
-    }
-
     /* RESPONSIVE DESIGN */
     @media (max-width: 900px) {
-        .perfect-card { 
+        .smooth-card { 
             width: 85%; 
             margin-left: 90px; 
         }
-        .perfect-grid { 
+        .smooth-grid { 
             grid-template-columns: 1fr; 
-        }
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
         }
     }
     
     @media (max-width: 768px) {
-        .perfect-card { 
+        .smooth-card { 
             width: 90%; 
             margin-left: 20px;
             margin-right: 20px;
         }
-        .perfect-sidebar {
+        .smooth-sidebar {
             display: none;
-        }
-        .stats-grid {
-            grid-template-columns: 1fr;
         }
     }
 
     </style>
 
-    <div class="perfect-header">
+    <div class="smooth-header">
         <div>🏥 DIABETES AI DIAGNOSTIC SUITE</div>
         <div>v2.1 | MEDICAL GRADE</div>
     </div>
 
-    <div class="perfect-sidebar">
+    <div class="smooth-sidebar">
         <div>⚡</div>
         <div>🔍</div>
         <div>📊</div>
         <div>🎯</div>
         <div>⚕️</div>
     </div>
+    
+    <div class="particles" id="particles"></div>
+    """, unsafe_allow_html=True)
+
+
+# ---------- Particle Animation Script ----------
+def add_particles():
+    st.markdown("""
+    <script>
+    function createParticles() {
+        const container = document.getElementById('particles');
+        const particleCount = 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Random properties
+            const size = Math.random() * 8 + 2;
+            const left = Math.random() * 100;
+            const animationDuration = Math.random() * 20 + 10;
+            const animationDelay = Math.random() * 5;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${left}vw`;
+            particle.style.animationDuration = `${animationDuration}s`;
+            particle.style.animationDelay = `${animationDelay}s`;
+            
+            container.appendChild(particle);
+        }
+    }
+    
+    // Create particles when page loads
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', createParticles);
+    } else {
+        createParticles();
+    }
+    </script>
     """, unsafe_allow_html=True)
 
 
 # ---------- Main ----------
 def main():
     load_css()
+    add_particles()
 
     # MAIN CARD
-    st.markdown('<div class="perfect-card">', unsafe_allow_html=True)
+    st.markdown('<div class="smooth-card">', unsafe_allow_html=True)
 
-    # Animated blobs
-    st.markdown('<div class="perfect-blob-1"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="perfect-blob-2"></div>', unsafe_allow_html=True)
+    # SMOOTH BADGE
+    st.markdown('<div class="smooth-badge">🎯 AI DIAGNOSTIC TOOL v2.1</div>', unsafe_allow_html=True)
 
-    # PERFECT BADGE
-    st.markdown('<div class="perfect-badge">🎯 AI DIAGNOSTIC TOOL v2.1</div>', unsafe_allow_html=True)
+    st.markdown('<div class="smooth-title">DIABETES RISK ASSESSMENT</div>', unsafe_allow_html=True)
+    st.markdown('<div class="smooth-sub">Enter patient clinical parameters for comprehensive diabetes assessment and AI-powered health analysis</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="perfect-title">DIABETES RISK ASSESSMENT</div>', unsafe_allow_html=True)
-    st.markdown('<div class="perfect-sub">Enter patient clinical parameters for comprehensive diabetes assessment and AI-powered health analysis</div>', unsafe_allow_html=True)
-
-    # STATISTICS CARDS
-    st.markdown('<div class="stats-grid">', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Dynamic Stats
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown('<div class="stat-card"><div class="stat-value">98.2%</div><div class="stat-label">ACCURACY RATE</div></div>', unsafe_allow_html=True)
-    with col2:
-        st.markdown('<div class="stat-card"><div class="stat-value">15K+</div><div class="stat-label">TESTS ANALYZED</div></div>', unsafe_allow_html=True)
-    with col3:
-        st.markdown('<div class="stat-card"><div class="stat-value">0.3s</div><div class="stat-label">AVG PROCESSING</div></div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="perfect-grid">', unsafe_allow_html=True)
+    st.markdown('<div class="smooth-grid">', unsafe_allow_html=True)
     
-    # Column 1 - Beautiful gradient input boxes
+    # Column 1 - Smooth glass input boxes
     p = st.text_input("PREGNANCIES COUNT", placeholder="Enter number...")
     g = st.text_input("GLUCOSE LEVEL", placeholder="mg/dL (70-200)")
     bp = st.text_input("BLOOD PRESSURE", placeholder="mmHg (60-180)")
     stn = st.text_input("SKIN THICKNESS", placeholder="mm (0-60)")
     
-    # Column 2 - Beautiful gradient input boxes
+    # Column 2 - Smooth glass input boxes
     ins = st.text_input("INSULIN LEVEL", placeholder="μU/mL (0-300)")
     bmi = st.text_input("BODY MASS INDEX", placeholder="BMI (10-60)")
     dpf = st.text_input("PEDIGREE FUNCTION", placeholder="0.00 - 2.50")
@@ -502,7 +508,7 @@ def main():
     
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Additional Features
+    # Additional Features with smooth glass design
     with st.expander("🔧 ADVANCED OPTIONS"):
         col1, col2 = st.columns(2)
         with col1:
@@ -519,17 +525,17 @@ def main():
                 result, risk_percentage = diabetes_prediction([p, g, bp, stn, ins, bmi, dpf, age])
                 
                 if result:
-                    # RISK METER
+                    # RISK METER with smooth glass design
                     st.markdown(f'''
-                    <div class="risk-meter">
-                        <div class="risk-title">AI DIAGNOSIS COMPLETE</div>
+                    <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(30px); border-radius: 20px; padding: 30px; margin: 25px 0; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center;">
+                        <div style="font-size: 26px; font-weight: 800; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4);">AI DIAGNOSIS COMPLETE</div>
                         <div style="font-size: 22px; color: white; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">Prediction Result:</div>
-                        <div style="font-size: 32px; font-weight: 900; color: {"#4CAF50" if "NOT" in result else "#FF6B6B"}; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); margin: 20px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        <div style="font-size: 32px; font-weight: 900; color: {"#4CAF50" if "NOT" in result else "#FF6B6B"}; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
                             {result}
                         </div>
-                        <div class="risk-title">ESTIMATED RISK LEVEL</div>
-                        <div class="risk-value">{risk_percentage}%</div>
-                        <div style="background: rgba(255,255,255,0.2); height: 24px; border-radius: 12px; margin: 20px 0; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                        <div style="font-size: 24px; font-weight: 800; color: white; margin: 25px 0 15px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.4);">ESTIMATED RISK LEVEL</div>
+                        <div style="font-size: 46px; font-weight: 900; color: #ffd700; text-shadow: 3px 3px 8px rgba(0,0,0,0.5); margin: 20px 0;">{risk_percentage}%</div>
+                        <div style="background: rgba(255,255,255,0.15); height: 24px; border-radius: 12px; margin: 20px 0; overflow: hidden; box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);">
                             <div style="height: 100%; background: linear-gradient(90deg, {"#4CAF50" if risk_percentage < 30 else "#FFA500" if risk_percentage < 70 else "#FF6B6B"}, {"#4CAF50" if risk_percentage < 30 else "#FFA500" if risk_percentage < 70 else "#FF6B6B"}); width: {risk_percentage}%; transition: width 1s ease; border-radius: 12px;"></div>
                         </div>
                         <div style="color: rgba(255,255,255,0.9); font-size: 16px; margin-top: 15px; font-weight: 600;">
@@ -558,22 +564,10 @@ def main():
         else:
             st.error("⚠️ Please complete all required clinical parameters for accurate analysis")
 
-    # HEALTH TIPS SECTION
-    st.markdown("---")
-    st.markdown('<div style="color: white; font-size: 26px; font-weight: 800; text-align: center; margin: 30px 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.4);">💡 HEALTH & WELLNESS TIPS</div>', unsafe_allow_html=True)
-    
-    tip_col1, tip_col2, tip_col3 = st.columns(3)
-    with tip_col1:
-        st.markdown('<div style="background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)); backdrop-filter: blur(15px); padding: 22px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 8px 25px rgba(0,0,0,0.15);"><div style="font-size: 18px; color: #ffd700; font-weight: 800; margin-bottom: 10px;">🥗 Nutrition</div><div style="color: white; font-size: 14px; line-height: 1.5;">Focus on fiber-rich foods, limit processed sugars, and maintain balanced meals</div></div>', unsafe_allow_html=True)
-    with tip_col2:
-        st.markdown('<div style="background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)); backdrop-filter: blur(15px); padding: 22px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 8px 25px rgba(0,0,0,0.15);"><div style="font-size: 18px; color: #ffd700; font-weight: 800; margin-bottom: 10px;">🏃 Exercise</div><div style="color: white; font-size: 14px; line-height: 1.5;">150 minutes of moderate activity per week recommended for optimal health</div></div>', unsafe_allow_html=True)
-    with tip_col3:
-        st.markdown('<div style="background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)); backdrop-filter: blur(15px); padding: 22px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 8px 25px rgba(0,0,0,0.15);"><div style="font-size: 18px; color: #ffd700; font-weight: 800; margin-bottom: 10px;">📊 Monitoring</div><div style="color: white; font-size: 14px; line-height: 1.5;">Regular health check-ups and glucose monitoring help in early detection</div></div>', unsafe_allow_html=True)
-
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # PERFECT FOOTER
-    st.markdown('<div class="perfect-footer">Advanced Medical AI Diagnostics Platform<br>Developed with ❤️ by <b>KARTVAYA RAIKWAR</b></div>', unsafe_allow_html=True)
+    # SMOOTH FOOTER
+    st.markdown('<div class="smooth-footer">Advanced Medical AI Diagnostics Platform<br>Developed with ❤️ by <b>KARTVAYA RAIKWAR</b></div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
