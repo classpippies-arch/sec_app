@@ -17,10 +17,16 @@ except Exception:
     # To enable Plotly, add `plotly` to your requirements.txt or run `pip install plotly` in your environment.
 
 
-# --------- Load Model ---------
+# --------- Safe Model Loader ---------
+loaded_model = None
 model_path = os.path.join(os.path.dirname(__file__), "trained_model.sav")
-with open(model_path, "rb") as file:
-    loaded_model = pickle.load(file)
+try:
+    with open(model_path, "rb") as file:
+        loaded_model = pickle.load(file)
+    print("Model loaded successfully!")
+except Exception as e:
+    loaded_model = None
+    print("Model failed to load:", e)
 
 
 def diabetes_prediction(input_data):
@@ -85,6 +91,13 @@ def load_css():
 # ---------- Main Application ----------
 
 def main():
+    # Immediate visible debug banner to confirm the app is running (renders before CSS heavy layers)
+    st.markdown("""
+    <div style='position:relative; z-index:99999; color:#fff; font-weight:900; padding:10px 18px; background:#111; border-radius:8px; margin:8px 20px;'>
+      🔧 DEBUG: App is running — content should appear below. If you still see a blank page, open browser devtools and check console.
+    </div>
+    """, unsafe_allow_html=True)
+
     # initialize session history
     if 'history' not in st.session_state:
         st.session_state.history = []
