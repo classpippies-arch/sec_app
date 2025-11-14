@@ -9,72 +9,117 @@ with open(model_path, "rb") as file:
 
 def diabetes_prediction(input_data):
     input_data = np.asarray(input_data, dtype=float).reshape(1, -1)
-    prediction = loaded_model.predict(input_data)
-    return "The person is NOT diabetic" if prediction[0] == 0 else "The person IS diabetic"
+    pred = loaded_model.predict(input_data)
+    return "The person is NOT diabetic" if pred[0] == 0 else "The person IS diabetic"
 
 
-# ---------------- CSS LIQUID GAS BACKGROUND ----------------
-liquid_css = """
-<style>
-.stApp {
-    background: radial-gradient(circle at 30% 20%, rgba(255,120,10,0.35), transparent 60%),
-                radial-gradient(circle at 70% 80%, rgba(255,175,10,0.30), transparent 60%),
-                linear-gradient(135deg, #111, #1b1b1b);
-}
+# --------------- LIQUID GLASS CSS ----------------
+def load_css():
+    st.markdown("""
+    <style>
 
-.bubble {
-    position: fixed;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(circle, rgba(255,140,40,0.35), rgba(255,140,40,0.05));
-    border-radius: 50%;
-    filter: blur(40px);
-    animation: float 8s ease-in-out infinite;
-    z-index: -1;
-}
+    /* PAGE BACKGROUND */
+    .stApp {
+        background: #0f0f0f;
+        overflow: hidden;
+        position: relative;
+        font-family: 'Inter', sans-serif;
+    }
 
-#b1 { top: 10%; left: 20%; animation-delay: 0s; }
-#b2 { top: 50%; left: 60%; animation-delay: 2s; }
-#b3 { top: 70%; left: 30%; animation-delay: 4s; }
+    /* LIQUID BLOB ANIMATION */
+    .liquid-bg {
+        position: fixed;
+        top: -200px;
+        left: -200px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle at 30% 30%, #ff7a1a55, #ff7a1a22, transparent);
+        filter: blur(80px);
+        animation: blobMove 12s infinite ease-in-out;
+        z-index: -1;
+        border-radius: 50%;
+    }
 
-@keyframes float {
-    0%   { transform: translateY(0px) scale(1); }
-    50%  { transform: translateY(-40px) scale(1.15); }
-    100% { transform: translateY(0px) scale(1); }
-}
+    @keyframes blobMove {
+        0%   { transform: translate(0px, 0px) scale(1); }
+        50%  { transform: translate(200px, 120px) scale(1.3); }
+        100% { transform: translate(0px, 0px) scale(1); }
+    }
 
-/* glass card */
-.glassbox {
-    backdrop-filter: blur(20px);
-    background: rgba(255,255,255,0.12);
-    border-radius: 22px;
-    padding: 25px;
-    border: 1px solid rgba(255,255,255,0.18);
-}
-</style>
+    /* GLASS CARD */
+    .glass-card {
+        backdrop-filter: blur(20px) saturate(180%);
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 25px;
+        padding: 35px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+        margin-top: 20px;
+        animation: fadeInUp 0.9s ease;
+    }
 
-<div class="bubble" id="b1"></div>
-<div class="bubble" id="b2"></div>
-<div class="bubble" id="b3"></div>
-"""
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
 
+    /* TITLE */
+    .title {
+        font-size: 38px;
+        font-weight: 800;
+        text-align: center;
+        background: linear-gradient(90deg, #ff7a1a, #ffaa56);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 12px;
+    }
+
+    /* BUTTON */
+    .stButton > button {
+        background: linear-gradient(90deg, #ff7a1a, #ff9c42);
+        border-radius: 12px;
+        padding: 10px 25px;
+        font-size: 18px;
+        color: white;
+        border: none;
+        transition: 0.2s;
+    }
+
+    .stButton > button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px #ff7a1a55;
+    }
+
+    </style>
+
+    <div class="liquid-bg"></div>
+
+    """, unsafe_allow_html=True)
+
+
+
+# ------------------ MAIN APP ---------------------
 def main():
-    st.markdown(liquid_css, unsafe_allow_html=True)
+    load_css()
 
-    st.markdown("<h1 style='color:white;text-align:center;'>Diabetes Prediction</h1>", unsafe_allow_html=True)
+    st.markdown("<div class='title'>🩺 Diabetes Prediction</div>", unsafe_allow_html=True)
 
-    st.markdown("<div class='glassbox'>", unsafe_allow_html=True)
+    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
 
-    labels = [
-        "Number of Pregnancies","Glucose Level","Blood Pressure",
-        "Skin Thickness","Insulin Level","BMI",
-        "Diabetes Pedigree Function","Age"
+    inputs = [
+        st.text_input("Number of Pregnancies"),
+        st.text_input("Glucose Level"),
+        st.text_input("Blood Pressure"),
+        st.text_input("Skin Thickness"),
+        st.text_input("Insulin Level"),
+        st.text_input("BMI"),
+        st.text_input("Diabetes Pedigree Function"),
+        st.text_input("Age")
     ]
 
-    inputs = [st.text_input(label) for label in labels]
-
     if st.button("Predict"):
-        st.success(diabetes_prediction(inputs))
+        result = diabetes_prediction(inputs)
+        st.success(f"### Result: {result}")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
