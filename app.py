@@ -18,235 +18,317 @@ def diabetes_prediction(input_data):
     return "NOT diabetic" if pred[0] == 0 else "IS diabetic"
 
 
-# ---------- MEDICAL PROFESSIONAL UI CSS --------------
+# ---------- VIBRANT FILM-STYLE UI CSS --------------
 def load_css():
     st.markdown("""
     <style>
 
-    /* CLEAN MEDICAL THEME BACKGROUND */
+    /* VIBRANT GRADIENT BACKGROUND */
     .stApp {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%) !important;
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
         font-family: 'Inter', 'Segoe UI', sans-serif;
     }
+    
+    @keyframes gradientShift {
+        0% { background-position: 0% 50% }
+        50% { background-position: 100% 50% }
+        100% { background-position: 0% 50% }
+    }
 
-    /* PROFESSIONAL HEADER */
-    .medical-header {
+    /* GLASS MORPHISM HEADER */
+    .vibrant-header {
         position: fixed;
         top: 0; left: 0;
         width: 100%;
-        background: rgba(255,255,255,0.95);
-        backdrop-filter: blur(20px);
-        padding: 20px 30px;
-        border-bottom: 1px solid rgba(0,0,0,0.08);
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(25px);
+        padding: 20px 40px;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
         z-index: 100;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-weight: 700;
-        color: #1a73e8;
-        box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        font-weight: 800;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        font-size: 22px;
     }
 
-    /* MEDICAL SIDEBAR */
-    .medical-sidebar {
+    /* FLOATING SIDEBAR */
+    .vibrant-sidebar {
         position: fixed;
-        top: 80px;
-        left: 0;
+        top: 90px;
+        left: 20px;
         width: 70px;
-        height: calc(100% - 80px);
-        background: rgba(255,255,255,0.9);
-        backdrop-filter: blur(15px);
-        border-right: 1px solid rgba(0,0,0,0.06);
-        padding-top: 30px;
+        height: calc(100% - 120px);
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding-top: 40px;
         text-align: center;
         z-index: 90;
-        border-radius: 0 16px 16px 0;
-        box-shadow: 3px 0 15px rgba(0,0,0,0.04);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     }
 
-    .medical-sidebar div { 
-        margin: 25px 0; 
-        font-size: 20px;
-        opacity: 0.7;
-        transition: opacity 0.3s;
+    .vibrant-sidebar div { 
+        margin: 30px 0; 
+        font-size: 24px;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
     }
     
-    .medical-sidebar div:hover { 
-        opacity: 1;
-        transform: scale(1.1);
+    .vibrant-sidebar div:hover { 
+        transform: scale(1.2);
+        color: #ffeb3b;
     }
 
-    /* MEDICAL GRADIENT BLOB */
-    .medical-blob {
+    /* MULTI-COLORED BLOBS */
+    .color-blob-1 {
         position: absolute;
-        top: -80px;
-        right: -60px;
-        width: 250px;
-        height: 250px;
-        background: radial-gradient(circle, #e3f2fd 0%, #bbdefb 50%, transparent 70%);
-        filter: blur(40px);
+        top: -100px;
+        left: -80px;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, #ff0080 0%, transparent 70%);
+        filter: blur(50px);
         border-radius: 50%;
-        animation: float 8s infinite ease-in-out;
+        animation: float1 12s infinite ease-in-out;
         z-index: 1;
     }
     
-    @keyframes float {
+    .color-blob-2 {
+        position: absolute;
+        bottom: -120px;
+        right: -100px;
+        width: 350px;
+        height: 350px;
+        background: radial-gradient(circle, #4facfe 0%, transparent 70%);
+        filter: blur(60px);
+        border-radius: 50%;
+        animation: float2 10s infinite ease-in-out;
+        z-index: 1;
+    }
+    
+    .color-blob-3 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, #ffeb3b 0%, transparent 70%);
+        filter: blur(40px);
+        border-radius: 50%;
+        animation: pulse 8s infinite ease-in-out;
+        z-index: 1;
+    }
+    
+    @keyframes float1 {
         0% { transform: translate(0,0) scale(1); }
-        50% { transform: translate(-20px,15px) scale(1.05); }
+        33% { transform: translate(30px,40px) scale(1.1); }
+        66% { transform: translate(-20px,20px) scale(0.9); }
         100% { transform: translate(0,0) scale(1); }
     }
+    
+    @keyframes float2 {
+        0% { transform: translate(0,0) scale(1); }
+        33% { transform: translate(-40px,30px) scale(0.9); }
+        66% { transform: translate(20px,-20px) scale(1.1); }
+        100% { transform: translate(0,0) scale(1); }
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.8); }
+        50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.2); }
+        100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.8); }
+    }
 
-    /* PROFESSIONAL MEDICAL CARD */
-    .medical-card {
-        margin: 120px auto;
-        margin-left: 100px;
-        width: 70%;
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: blur(25px);
-        border-radius: 20px;
-        padding: 40px;
-        border: 1px solid rgba(255,255,255,0.2);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    /* GLASS MORPHISM CARD */
+    .vibrant-card {
+        margin: 130px auto;
+        margin-left: 120px;
+        width: 68%;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(30px);
+        border-radius: 25px;
+        padding: 45px;
+        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         position: relative;
         overflow: hidden;
     }
 
-    /* MEDICAL BADGE */
-    .medical-badge {
+    /* VIBRANT BADGE */
+    .vibrant-badge {
         position: relative;
         z-index: 2;
-        padding: 8px 16px;
-        background: linear-gradient(135deg, #1a73e8, #4285f4);
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #ff0080, #ff8a00);
         color: white;
-        border-radius: 12px;
-        font-weight: 600;
+        border-radius: 15px;
+        font-weight: 700;
         display: inline-block;
-        margin-bottom: 20px;
-        font-size: 14px;
-        box-shadow: 0 4px 15px rgba(26,115,232,0.2);
+        margin-bottom: 25px;
+        font-size: 16px;
+        box-shadow: 0 8px 25px rgba(255,0,128,0.4);
+        border: 1px solid rgba(255,255,255,0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
-    .card-title {
-        font-size: 32px;
-        font-weight: 800;
+    .vibrant-title {
+        font-size: 42px;
+        font-weight: 900;
         z-index: 2; 
         position: relative;
-        color: #1a237e;
-        margin-bottom: 8px;
-        background: linear-gradient(135deg, #1a237e, #283593);
+        color: white;
+        margin-bottom: 15px;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        background: linear-gradient(135deg, #ffffff, #ffeb3b, #4facfe);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        text-align: center;
     }
 
-    .sub {
-        color: #5f6368;
-        margin-bottom: 30px;
+    .vibrant-sub {
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 35px;
         z-index: 2; 
         position: relative;
-        font-size: 16px;
-        line-height: 1.5;
+        font-size: 18px;
+        line-height: 1.6;
+        text-align: center;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        font-weight: 500;
     }
 
     /* FORM GRID */
-    .medical-grid {
+    .vibrant-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px 25px;
+        gap: 22px 28px;
         z-index: 2;
         position: relative;
-        margin-bottom: 25px;
+        margin-bottom: 30px;
     }
 
-    /* ENHANCED INPUT STYLING */
+    /* VIBRANT INPUT STYLING */
     .stTextInput > div > div > input {
-        background: rgba(248, 249, 250, 0.8);
-        border: 1.5px solid #e0e0e0;
-        border-radius: 12px;
-        padding: 12px 16px;
-        font-size: 14px;
+        background: rgba(255,255,255,0.12);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 15px;
+        padding: 14px 18px;
+        font-size: 15px;
         transition: all 0.3s ease;
+        color: white;
+        font-weight: 500;
+    }
+    
+    .stTextInput > div > div > input::placeholder {
+        color: rgba(255,255,255,0.7);
     }
     
     .stTextInput > div > div > input:focus {
-        border-color: #1a73e8;
-        box-shadow: 0 0 0 2px rgba(26,115,232,0.1);
-        background: white;
+        border-color: #ffeb3b;
+        box-shadow: 0 0 0 3px rgba(255,235,59,0.3);
+        background: rgba(255,255,255,0.2);
     }
 
-    /* MEDICAL BUTTON */
+    /* VIBRANT BUTTON */
     .stButton > button {
-        background: linear-gradient(135deg, #1a73e8, #4285f4);
-        padding: 14px 28px;
+        background: linear-gradient(135deg, #ff0080, #ff8a00, #ffeb3b);
+        background-size: 200% 200%;
+        animation: gradientShift 3s ease infinite;
+        padding: 16px 32px;
         width: 100%;
-        border-radius: 12px;
-        color: white;
-        font-weight: 600;
+        border-radius: 15px;
+        color: #000;
+        font-weight: 700;
         border: none;
-        font-size: 16px;
+        font-size: 18px;
         transition: all 0.3s ease;
-        box-shadow: 0 8px 25px rgba(26,115,232,0.25);
+        box-shadow: 0 10px 30px rgba(255,0,128,0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 30px rgba(26,115,232,0.35);
-        background: linear-gradient(135deg, #1669d6, #3367d6);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(255,0,128,0.6);
     }
 
     /* SUCCESS MESSAGE STYLING */
     .stSuccess {
-        background: linear-gradient(135deg, #34a853, #4caf50);
-        color: white;
-        border-radius: 12px;
+        background: linear-gradient(135deg, #00ff88, #00ccff);
+        color: #000;
+        border-radius: 15px;
         padding: 20px;
         border: none;
+        font-weight: 700;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0,255,136,0.4);
+    }
+
+    /* VIBRANT FOOTER */
+    .vibrant-footer {
+        text-align: center;
+        margin-top: 40px;
+        color: rgba(255,255,255,0.8);
+        font-size: 16px;
+        position: relative;
+        z-index: 2;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         font-weight: 600;
     }
 
-    /* FOOTER */
-    .medical-footer {
-        text-align: center;
-        margin-top: 35px;
-        color: #5f6368;
-        font-size: 14px;
-        position: relative;
-        z-index: 2;
+    .vibrant-footer b {
+        background: linear-gradient(135deg, #ffeb3b, #4facfe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
     }
 
     /* RESPONSIVE DESIGN */
     @media (max-width: 900px) {
-        .medical-card { 
+        .vibrant-card { 
             width: 85%; 
-            margin-left: 80px; 
+            margin-left: 100px; 
         }
-        .medical-grid { 
+        .vibrant-grid { 
             grid-template-columns: 1fr; 
         }
     }
     
     @media (max-width: 768px) {
-        .medical-card { 
+        .vibrant-card { 
             width: 90%; 
             margin-left: 20px;
             margin-right: 20px;
         }
-        .medical-sidebar {
+        .vibrant-sidebar {
             display: none;
+        }
+        .vibrant-title {
+            font-size: 32px;
         }
     }
 
     </style>
 
-    <div class="medical-header">
-        <div>🏥 Diabetes Diagnostic Assistant</div>
-        <div>Medical Intelligence Platform</div>
+    <div class="vibrant-header">
+        <div>🎬 DIABETES AI SCANNER</div>
+        <div>NEURAL DIAGNOSTICS</div>
     </div>
 
-    <div class="medical-sidebar">
-        <div>🩺</div>
+    <div class="vibrant-sidebar">
+        <div>⚡</div>
+        <div>🔍</div>
         <div>📊</div>
-        <div>📈</div>
-        <div>⚕️</div>
+        <div>🎯</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -256,44 +338,46 @@ def main():
     load_css()
 
     # MAIN CARD
-    st.markdown('<div class="medical-card">', unsafe_allow_html=True)
+    st.markdown('<div class="vibrant-card">', unsafe_allow_html=True)
 
-    # Medical gradient blob
-    st.markdown('<div class="medical-blob"></div>', unsafe_allow_html=True)
+    # Multiple colored blobs
+    st.markdown('<div class="color-blob-1"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="color-blob-2"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="color-blob-3"></div>', unsafe_allow_html=True)
 
-    # Professional medical badge
-    st.markdown('<div class="medical-badge">AI DIAGNOSTIC TOOL</div>', unsafe_allow_html=True)
+    # Vibrant badge
+    st.markdown('<div class="vibrant-badge">AI DIAGNOSTIC TOOL</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="card-title">Diabetes Risk Assessment</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub">Enter patient clinical parameters for AI-powered diabetes risk prediction</div>', unsafe_allow_html=True)
+    st.markdown('<div class="vibrant-title">DIABETES RISK ASSESSMENT</div>', unsafe_allow_html=True)
+    st.markdown('<div class="vibrant-sub">Enter patient clinical parameters for AI-powered diabetes prediction analysis and neural network diagnostics</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="medical-grid">', unsafe_allow_html=True)
+    st.markdown('<div class="vibrant-grid">', unsafe_allow_html=True)
     
     # Column 1
-    p = st.text_input("Pregnancies", placeholder="e.g., 2")
-    g = st.text_input("Glucose Level (mg/dL)", placeholder="e.g., 120")
-    bp = st.text_input("Blood Pressure (mmHg)", placeholder="e.g., 80")
-    stn = st.text_input("Skin Thickness (mm)", placeholder="e.g., 25")
+    p = st.text_input("PREGNANCIES", placeholder="Enter value...")
+    g = st.text_input("GLUCOSE LEVEL", placeholder="mg/dL")
+    bp = st.text_input("BLOOD PRESSURE", placeholder="mmHg")
+    stn = st.text_input("SKIN THICKNESS", placeholder="mm")
     
     # Column 2  
-    ins = st.text_input("Insulin Level (μU/mL)", placeholder="e.g., 80")
-    bmi = st.text_input("BMI", placeholder="e.g., 25.5")
-    dpf = st.text_input("Diabetes Pedigree Function", placeholder="e.g., 0.5")
-    age = st.text_input("Age (years)", placeholder="e.g., 35")
+    ins = st.text_input("INSULIN LEVEL", placeholder="μU/mL")
+    bmi = st.text_input("BMI VALUE", placeholder="Body Mass Index")
+    dpf = st.text_input("PEDIGREE FUNCTION", placeholder="0.00 - 2.00")
+    age = st.text_input("PATIENT AGE", placeholder="Years")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
-    if st.button("🔍 Analyze Diabetes Risk"):
+    if st.button("🚀 LAUNCH AI ANALYSIS"):
         if all([p, g, bp, stn, ins, bmi, dpf, age]):
             result = diabetes_prediction([p, g, bp, stn, ins, bmi, dpf, age])
             if result:
-                st.success(f"**Analysis Result:** Patient {result}")
+                st.success(f"**DIAGNOSTIC RESULT:** PATIENT {result}")
         else:
-            st.warning("Please fill in all fields before analysis.")
+            st.warning("⚠️ Please complete all clinical parameters for analysis")
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="medical-footer">Developed by <b>Kartvaya Raikwar</b></div>', unsafe_allow_html=True)
+    st.markdown('<div class="vibrant-footer">CREATED BY <b>KARTVAYA RAIKWAR</b></div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
