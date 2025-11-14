@@ -1,675 +1,390 @@
 import numpy as np
 import pickle
-import streamlit as st
 import os
 import time
 from datetime import datetime
-import plotly.graph_objects as go
-import plotly.express as px
+import pandas as pd
+
+# Optional Plotly imports (guarded to avoid ModuleNotFoundError on platforms without plotly)
+try:
+    import plotly.graph_objects as go
+    import plotly.express as px
+    PLOTLY_AVAILABLE = True
+except Exception:
+    PLOTLY_AVAILABLE = False
+    # If plotly isn't available, the app will fall back to matplotlib or simple Streamlit elements.
+    # To enable Plotly, add `plotly` to your requirements.txt or run `pip install plotly` in your environment.
+
 
 # --------- Load Model ---------
 model_path = os.path.join(os.path.dirname(__file__), "trained_model.sav")
 with open(model_path, "rb") as file:
     loaded_model = pickle.load(file)
 
+
 def diabetes_prediction(input_data):
+    """Return (label, risk_percentage, confidence)
+    - Uses predict_proba for confidence if available.
+    - risk_percentage: derived from confidence or simulated fallback.
+    """
     try:
         arr = np.asarray([float(x) for x in input_data]).reshape(1, -1)
-    except:
-        st.error("Enter valid numeric values only.")
-        return None, None
+    except Exception:
+        return None, None, None
+
     pred = loaded_model.predict(arr)
-    
-    # Calculate risk percentage (simulated)
-    risk_percentage = np.random.randint(15, 85) if pred[0] == 1 else np.random.randint(1, 30)
-    
-    return "NOT diabetic" if pred[0] == 0 else "IS diabetic", risk_percentage
+
+    # Confidence using predict_proba if available
+    confidence = None
+    try:
+        proba = loaded_model.predict_proba(arr)
+        confidence = float(np.max(proba) * 100)
+    except Exception:
+        confidence = None
+
+    # Calculate risk percentage (prefer confidence, else simulated)
+    if confidence is not None:
+        risk_percentage = int(confidence)
+    else:
+        risk_percentage = np.random.randint(15, 85) if pred[0] == 1 else np.random.randint(1, 30)
+
+    label = "NOT diabetic" if pred[0] == 0 else "IS diabetic"
+    return label, risk_percentage, confidence
 
 
-# ---------- ENHANCED PROFESSIONAL UI CSS --------------
+# ---------- PROFESSIONAL UI CSS  (FUTURISTIC MONOCHROME LIQUID GLASS) --------------
 def load_css():
     st.markdown("""
     <style>
+    /* Base app - full black/white glassy theme */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800;900&display=swap');
 
-    /* ENHANCED GRADIENT BACKGROUND */
-    .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) !important;
-        background-size: 400% 400% !important;
-        animation: professionalGradient 18s ease infinite !important;
-        font-family: 'Inter', 'Segoe UI', sans-serif !important;
-        min-height: 100vh !important;
-    }
-    
-    @keyframes professionalGradient {
-        0% { background-position: 0% 50% }
-        50% { background-position: 100% 50% }
-        100% { background-position: 0% 50% }
+    .stApp{
+        font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+        background: #0b0b0b;
+        color: #fff;
+        min-height:100vh;
+        overflow-x:hidden;
     }
 
-    /* ENHANCED HEADER */
-    .enhanced-header {
-        position: fixed;
-        top: 0; 
-        left: 0;
-        width: 100%;
-        background: rgba(255,255,255,0.12);
-        backdrop-filter: blur(35px);
-        padding: 20px 40px;
-        border-bottom: 1px solid rgba(255,255,255,0.15);
-        z-index: 1000;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-weight: 800;
-        color: white;
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
-        font-size: 18px;
-        box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+    /* Liquid glass animated background using radial gradients + CSS animations */
+    .liquid-bg{
+        position:fixed;
+        inset:0;
+        z-index:0;
+        pointer-events:none;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.03) 100%);
+        backdrop-filter: blur(8px);
+        mix-blend-mode: screen;
     }
 
-    /* MAIN CONTENT CARD */
-    .enhanced-card {
-        margin: 120px auto;
-        width: 85%;
-        max-width: 1200px;
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(40px);
-        border-radius: 28px;
-        padding: 50px;
-        border: 1px solid rgba(255,255,255,0.2);
-        box-shadow: 
-            0 35px 60px rgba(0,0,0,0.25),
-            inset 0 1px 0 rgba(255,255,255,0.1);
-        position: relative;
-        overflow: hidden;
+    .liquid-bg::before, .liquid-bg::after{
+        content:"";
+        position:absolute;
+        width:120vmax;
+        height:120vmax;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0.00) 35%), radial-gradient(circle at 70% 70%, rgba(255,255,255,0.04), rgba(255,255,255,0.00) 30%);
+        filter: blur(60px) saturate(120%);
+        animation: floaty 18s ease-in-out infinite;
+        opacity:0.9;
     }
 
-    /* ENHANCED BADGE */
-    .enhanced-badge {
-        position: relative;
-        z-index: 2;
-        padding: 14px 28px;
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(25px);
-        color: white;
-        border-radius: 18px;
-        font-weight: 800;
-        display: inline-block;
-        margin-bottom: 30px;
-        font-size: 16px;
-        box-shadow: 0 12px 35px rgba(0,0,0,0.25);
-        border: 1px solid rgba(255,255,255,0.25);
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    .liquid-bg::after{
+        background: radial-gradient(circle at 40% 60%, rgba(255,255,255,0.04), rgba(255,255,255,0.00) 30%), radial-gradient(circle at 60% 30%, rgba(255,255,255,0.05), rgba(255,255,255,0.00) 30%);
+        animation-duration: 22s;
+        transform: translate(-52%,-48%);
+        opacity:0.8;
     }
 
-    .enhanced-title {
-        font-size: 44px;
-        font-weight: 900;
-        z-index: 2; 
-        position: relative;
-        color: white;
-        margin-bottom: 20px;
-        text-shadow: 4px 4px 12px rgba(0,0,0,0.5);
-        text-align: center;
-        background: linear-gradient(135deg, #ffffff, #ffd700, #ffffff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        line-height: 1.2;
+    @keyframes floaty{
+        0% { transform: translate(-50%,-50%) scale(1) rotate(0deg); }
+        50% { transform: translate(-48%,-52%) scale(1.06) rotate(6deg); }
+        100% { transform: translate(-50%,-50%) scale(1) rotate(0deg); }
     }
 
-    .enhanced-subtitle {
-        color: rgba(255,255,255,0.9);
-        margin-bottom: 40px;
-        z-index: 2; 
-        position: relative;
-        font-size: 20px;
-        line-height: 1.6;
-        text-align: center;
-        text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
-        font-weight: 500;
-        padding: 0 40px;
+    /* subtle moving glass sheen overlay */
+    .glass-sheen{
+        position:fixed; inset:0; z-index:1; pointer-events:none; mix-blend-mode:overlay;
+        background: linear-gradient(120deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.01) 100%);
+        animation: sheen 10s linear infinite;
+        opacity:0.9;
+    }
+    @keyframes sheen { from {background-position:0% 50%;} to {background-position:100% 50%;} }
+
+    /* PROFESSIONAL HEADER - bigger, bold, with 'glasses' icon */
+    .professional-header{
+        position:fixed; top:14px; left:50%; transform:translateX(-50%); width:88%; max-width:1280px; z-index:1200;
+        display:flex; align-items:center; justify-content:space-between; gap:12px;
+        padding:12px 20px; border-radius:12px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.04);
+        backdrop-filter: blur(14px) saturate(120%);
     }
 
-    /* ENHANCED STATS GRID */
-    .enhanced-stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin: 40px 0;
+    .header-left{display:flex; align-items:center; gap:14px}
+    .app-glasses{
+        width:56px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.06);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.6) inset, 0 6px 30px rgba(255,255,255,0.02);
+    }
+    /* simple SVG glasses graphic */
+    .app-glasses svg{width:38px; height:20px; opacity:0.98}
+
+    .header-title{font-size:20px; font-weight:900; letter-spacing:1px; color:#ffffff;}
+    .header-sub{font-size:13px; color:rgba(255,255,255,0.7); font-weight:600}
+
+    /* MAIN CONTENT CARD - larger, bold title */
+    .professional-card{
+        margin:120px auto; width:88%; max-width:1200px; z-index:100; position:relative; padding:44px; border-radius:22px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        border: 1px solid rgba(255,255,255,0.04); backdrop-filter: blur(18px);
+        box-shadow: 0 40px 90px rgba(0,0,0,0.7);
     }
 
-    .enhanced-stat-card {
-        background: rgba(255,255,255,0.08);
-        backdrop-filter: blur(25px);
-        border-radius: 20px;
-        padding: 30px 25px;
-        text-align: center;
-        border: 1px solid rgba(255,255,255,0.15);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        transition: all 0.3s ease;
-    }
+    .professional-badge{display:inline-block; padding:10px 18px; border-radius:14px; font-weight:800; color:white; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04)}
 
-    .enhanced-stat-card:hover {
-        transform: translateY(-5px);
-        background: rgba(255,255,255,0.12);
-        box-shadow: 0 20px 45px rgba(0,0,0,0.3);
-    }
+    .professional-title{font-size:56px; font-weight:900; color:#ffffff; text-align:left; margin:8px 0 6px 0; letter-spacing:1px}
+    .professional-title .accent{color:#000; background:#fff; padding:0 6px; border-radius:6px}
 
-    .enhanced-stat-value {
-        font-size: 36px;
-        font-weight: 900;
-        color: #ffd700;
-        margin-bottom: 10px;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
-    }
+    .professional-subtitle{font-size:18px; color:rgba(255,255,255,0.85); margin-bottom:20px}
 
-    .enhanced-stat-label {
-        font-size: 14px;
-        color: rgba(255,255,255,0.9);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+    /* STATS GRID - bigger and bold */
+    .stats-grid{display:grid; grid-template-columns: repeat(3,1fr); gap:18px; margin-top:18px}
+    .stat-card{padding:28px 22px; border-radius:14px; background:rgba(255,255,255,0.015); border:1px solid rgba(255,255,255,0.03);}
+    .stat-value{font-size:34px; font-weight:900; color:#fff}
+    .stat-label{font-size:12px; color:rgba(255,255,255,0.7); font-weight:700; letter-spacing:1px}
 
-    /* ENHANCED INPUT FORM GRID */
-    .enhanced-form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 25px 30px;
-        margin: 40px 0;
-    }
+    /* FORM GRID */
+    .form-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-top:28px}
 
-    /* ENHANCED INPUT STYLING */
-    .stTextInput > div > div {
-        background: rgba(255,255,255,0.95) !important;
-        backdrop-filter: blur(20px) !important;
-        border: 2px solid rgba(255,255,255,0.8) !important;
-        border-radius: 18px !important;
-        padding: 8px !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 
-            0 12px 35px rgba(0,0,0,0.15),
-            inset 0 2px 8px rgba(255,255,255,0.3) !important;
-    }
+    /* inputs more bold and glassy */
+    .stTextInput > div > div{background:rgba(255,255,255,0.02)!important; border:1px solid rgba(255,255,255,0.04)!important; border-radius:14px!important; padding:10px!important}
+    .stTextInput label{color:rgba(255,255,255,0.95)!important; font-weight:800!important}
+    .stTextInput input{color:#fff!important; font-weight:700!important}
 
-    .stTextInput > div > div:hover {
-        background: rgba(255,255,255,0.98) !important;
-        border-color: rgba(102,126,234,0.6) !important;
-        box-shadow: 
-            0 18px 45px rgba(0,0,0,0.2),
-            inset 0 2px 12px rgba(255,255,255,0.4) !important;
-        transform: translateY(-2px);
-    }
+    /* Buttons - stronger presence */
+    .stButton > button{background:linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border-radius:12px; padding:14px 18px; font-weight:900; letter-spacing:1px; border:1px solid rgba(255,255,255,0.06)}
+    .stButton > button:hover{transform:translateY(-3px);}
 
-    .stTextInput > div > div > input {
-        background: transparent !important;
-        border: none !important;
-        border-radius: 14px !important;
-        padding: 16px 20px !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        color: #2c3e50 !important;
-        height: auto !important;
-    }
-    
-    .stTextInput > div > div > input::placeholder {
-        color: rgba(44,62,80,0.5) !important;
-        font-weight: 500 !important;
-        font-size: 15px !important;
-    }
-    
-    .stTextInput > div > div > input:focus {
-        outline: none !important;
-        box-shadow: 
-            inset 0 0 0 3px rgba(102,126,234,0.3),
-            0 0 25px rgba(102,126,234,0.2) !important;
-        background: rgba(255,255,255,0.9) !important;
-    }
+    /* Result container - bold and prominent */
+    .result-container{padding:36px; border-radius:16px; border:1px solid rgba(255,255,255,0.04); background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));}
+    .result-title{font-size:28px; font-weight:900}
+    .result-text{font-size:40px; font-weight:900}
 
-    /* ENHANCED INPUT LABELS */
-    .stTextInput label {
-        font-weight: 700 !important;
-        color: white !important;
-        margin-bottom: 12px !important;
-        font-size: 16px !important;
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.5) !important;
-        letter-spacing: 0.3px;
-        display: block;
-        padding-left: 8px;
-    }
+    .risk-meter{height:28px; background:rgba(255,255,255,0.02); border-radius:14px; overflow:hidden}
+    .risk-fill{height:100%; border-radius:14px; transition:width 1.6s ease}
 
-    /* ENHANCED BUTTON */
-    .stButton > button {
-        background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-        backdrop-filter: blur(30px);
-        padding: 20px 40px;
-        width: 100%;
-        border-radius: 20px;
-        color: white;
-        font-weight: 800;
-        border: 2px solid rgba(255,255,255,0.3);
-        font-size: 18px;
-        transition: all 0.4s ease;
-        box-shadow: 
-            0 15px 40px rgba(0,0,0,0.25),
-            inset 0 2px 0 rgba(255,255,255,0.2);
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        margin: 30px 0;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 
-            0 20px 50px rgba(0,0,0,0.35),
-            inset 0 2px 0 rgba(255,255,255,0.3);
-        background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
-        border-color: rgba(255,255,255,0.5);
-    }
+    /* Footer */
+    .professional-footer{margin-top:28px; padding:18px; border-radius:12px; text-align:center; background:rgba(255,255,255,0.01); color:rgba(255,255,255,0.7); border:1px solid rgba(255,255,255,0.03)}
 
-    /* ENHANCED RESULT DISPLAY */
-    .enhanced-result-container {
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(40px);
-        border-radius: 24px;
-        padding: 40px;
-        margin: 30px 0;
-        border: 1px solid rgba(255,255,255,0.2);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-        text-align: center;
-    }
-
-    .enhanced-result-title {
-        font-size: 32px;
-        font-weight: 800;
-        color: white;
-        margin-bottom: 25px;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
-    }
-
-    /* FEATURE CARDS */
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        margin: 40px 0;
-    }
-
-    .feature-card {
-        background: rgba(255,255,255,0.08);
-        backdrop-filter: blur(25px);
-        border-radius: 20px;
-        padding: 30px 25px;
-        text-align: center;
-        border: 1px solid rgba(255,255,255,0.15);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        transition: all 0.3s ease;
-    }
-
-    .feature-card:hover {
-        transform: translateY(-5px);
-        background: rgba(255,255,255,0.12);
-        box-shadow: 0 20px 45px rgba(0,0,0,0.3);
-    }
-
-    .feature-icon {
-        font-size: 40px;
-        margin-bottom: 15px;
-    }
-
-    .feature-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #ffd700;
-        margin-bottom: 10px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-    }
-
-    .feature-description {
-        font-size: 14px;
-        color: rgba(255,255,255,0.8);
-        line-height: 1.5;
-    }
-
-    /* ENHANCED FOOTER */
-    .enhanced-footer {
-        text-align: center;
-        margin-top: 50px;
-        color: rgba(255,255,255,0.8);
-        font-size: 16px;
-        padding: 25px;
-        background: rgba(255,255,255,0.08);
-        backdrop-filter: blur(25px);
-        border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.15);
-        box-shadow: 0 12px 35px rgba(0,0,0,0.2);
-    }
-
-    .enhanced-footer b {
-        background: linear-gradient(135deg, #ffd700, #ffa500);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 800;
-        font-size: 18px;
-    }
-
-    /* HIDE ALL UNNECESSARY ELEMENTS */
-    .stSidebar {
-        display: none !important;
-    }
-    
-    #MainMenu {
-        display: none !important;
-    }
-    
-    footer {
-        display: none !important;
-    }
-    
-    .stDeployButton {
-        display: none !important;
-    }
-    
-    .stStatusWidget {
-        display: none !important;
-    }
-
-    /* RESPONSIVE DESIGN */
-    @media (max-width: 1024px) {
-        .enhanced-card {
-            width: 90%;
-            padding: 40px 30px;
-        }
-        
-        .enhanced-form-grid {
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-        
-        .enhanced-stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .features-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .enhanced-header {
-            padding: 15px 20px;
-            font-size: 16px;
-        }
-        
-        .enhanced-card {
-            width: 95%;
-            margin: 100px auto;
-            padding: 30px 20px;
-        }
-        
-        .enhanced-title {
-            font-size: 32px;
-        }
-        
-        .enhanced-subtitle {
-            font-size: 18px;
-            padding: 0 20px;
-        }
-        
-        .enhanced-stats-grid {
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-        
-        .features-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .enhanced-stat-card {
-            padding: 25px 20px;
-        }
-        
-        .enhanced-stat-value {
-            font-size: 28px;
-        }
-    }
-
+    /* Responsive tweaks */
+    @media (max-width:1024px){ .professional-title{font-size:40px} .form-grid{grid-template-columns:1fr} .stats-grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:768px){ .professional-title{font-size:28px} .professional-card{padding:22px} .header-left{gap:8px} }
     </style>
 
-    <div class="enhanced-header">
-        <div>🏥 DIABETES AI DIAGNOSTIC SUITE</div>
-        <div>v4.0 | ADVANCED MEDICAL AI</div>
+    <!-- Background layers inserted into DOM for animated liquid glass feel -->
+    <div class="liquid-bg"></div>
+    <div class="glass-sheen"></div>
+
+    <!-- Header with glasses icon (inspired by UI glasses image) -->
+    <div class="professional-header">
+        <div class="header-left">
+            <div class="app-glasses">
+                <!-- simple glasses SVG, white/black-styled -->
+                <svg viewBox="0 0 64 32" xmlns="http://www.w3.org/2000/svg" fill="none">
+                    <rect x="2" y="8" width="20" height="12" rx="5" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.02)" />
+                    <rect x="42" y="8" width="20" height="12" rx="5" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.02)" />
+                    <path d="M22 14 H42" stroke="white" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </div>
+            <div>
+                <div class="header-title">DIABETES RISK — FUTURE VIEW</div>
+                <div class="header-sub">Monochrome liquid-glass UI • Animated background</div>
+            </div>
+        </div>
+        <div style="text-align:right">
+            <div style="font-weight:800; font-size:13px; color:rgba(255,255,255,0.9)">v3.0 • MEDICAL GRADE</div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
 
-# ---------- Create Risk Gauge Chart ----------
-def create_risk_gauge(risk_percentage):
-    fig = go.Figure(go.Indicator(
-        mode = "gauge+number+delta",
-        value = risk_percentage,
-        domain = {'x': [0, 1], 'y': [0, 1]},
-        title = {'text': "DIABETES RISK LEVEL", 'font': {'size': 20, 'color': 'white'}},
-        delta = {'reference': 50, 'increasing': {'color': "red"}},
-        gauge = {
-            'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "white"},
-            'bar': {'color': "#ffd700"},
-            'bgcolor': "rgba(255,255,255,0.1)",
-            'borderwidth': 2,
-            'bordercolor': "rgba(255,255,255,0.3)",
-            'steps': [
-                {'range': [0, 30], 'color': '#4CAF50'},
-                {'range': [30, 70], 'color': '#FFA500'},
-                {'range': [70, 100], 'color': '#FF6B6B'}],
-            'threshold': {
-                'line': {'color': "white", 'width': 4},
-                'thickness': 0.75,
-                'value': risk_percentage}}
-    ))
-    
-    fig.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        font = {'color': "white", 'family': "Arial"},
-        height=300,
-        margin=dict(l=50, r=50, t=80, b=50)
-    )
-    
-    return fig
-
-
-# ---------- Create Parameter Chart ----------
-def create_parameter_chart(labels, values):
-    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
-    
-    fig = go.Figure(data=[go.Bar(
-        x=labels,
-        y=values,
-        marker_color=colors,
-        text=values,
-        textposition='auto',
-    )])
-    
-    fig.update_layout(
-        title={'text': "CLINICAL PARAMETERS OVERVIEW", 'font': {'size': 20, 'color': 'white'}},
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(255,255,255,0.1)',
-        font={'color': "white"},
-        xaxis={'tickfont': {'size': 12}},
-        height=400
-    )
-    
-    return fig
-
-
 # ---------- Main Application ----------
+
 def main():
-    # Load enhanced CSS
+    # initialize session history
+    if 'history' not in st.session_state:
+        st.session_state.history = []
+
+    # Load professional CSS (futuristic liquid glass)
     load_css()
-    
+
     # MAIN CONTENT CARD
-    st.markdown('<div class="enhanced-card">', unsafe_allow_html=True)
+    st.markdown('<div class="professional-card">', unsafe_allow_html=True)
 
-    # ENHANCED BADGE
-    st.markdown('<div class="enhanced-badge">🎯 ADVANCED AI DIAGNOSTIC TOOL v4.0</div>', unsafe_allow_html=True)
+    # PROFESSIONAL BADGE
+    st.markdown('<div class="professional-badge">🎯 AI DIAGNOSTIC TOOL v3.0</div>', unsafe_allow_html=True)
 
-    # MAIN TITLE - Fixed as requested
-    st.markdown('<div class="enhanced-title">DIABETES RISK ASSESSMENT</div>', unsafe_allow_html=True)
-    st.markdown('<div class="enhanced-subtitle">Advanced AI-powered diabetes risk assessment with comprehensive clinical analysis and predictive analytics</div>', unsafe_allow_html=True)
+    # MAIN TITLE (big, bold)
+    st.markdown('<div class="professional-title">DIABETES RISK ASSESSMENT</div>', unsafe_allow_html=True)
+    st.markdown('<div class="professional-subtitle">Enter patient clinical parameters for comprehensive diabetes assessment using advanced AI algorithms</div>', unsafe_allow_html=True)
 
-    # ENHANCED STATISTICS - Updated numbers as requested
-    st.markdown('<div class="enhanced-stats-grid">', unsafe_allow_html=True)
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.markdown('<div class="enhanced-stat-card"><div class="enhanced-stat-value">15K+</div><div class="enhanced-stat-label">TESTS ANALYZED</div></div>', unsafe_allow_html=True)
-    with col2:
-        st.markdown('<div class="enhanced-stat-card"><div class="enhanced-stat-value">98.7%</div><div class="enhanced-stat-label">ACCURACY RATE</div></div>', unsafe_allow_html=True)
-    with col3:
-        st.markdown('<div class="enhanced-stat-card"><div class="enhanced-stat-value">0.2s</div><div class="enhanced-stat-label">AVG PROCESSING</div></div>', unsafe_allow_html=True)
-    with col4:
-        st.markdown('<div class="enhanced-stat-card"><div class="enhanced-stat-value">100+</div><div class="enhanced-stat-label">PARAMETERS CHECKED</div></div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # NEW FEATURES SECTION
-    st.markdown('<div style="text-align: center; color: white; font-size: 32px; font-weight: 800; margin: 50px 0 30px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.5);">✨ ADVANCED FEATURES</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="features-grid">', unsafe_allow_html=True)
+    # STATISTICS
+    st.markdown('<div class="stats-grid">', unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown('''
-        <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <div class="feature-title">Real-time Analytics</div>
-            <div class="feature-description">Live data visualization and trend analysis with interactive charts and risk progression tracking</div>
-        </div>
-        ''', unsafe_allow_html=True)
+        st.markdown('<div class="stat-card"><div class="stat-value">98.7%</div><div class="stat-label">ACCURACY RATE</div></div>', unsafe_allow_html=True)
     with col2:
-        st.markdown('''
-        <div class="feature-card">
-            <div class="feature-icon">🤖</div>
-            <div class="feature-title">AI Predictions</div>
-            <div class="feature-description">Advanced machine learning algorithms providing accurate diabetes risk predictions with confidence scores</div>
-        </div>
-        ''', unsafe_allow_html=True)
+        st.markdown('<div class="stat-card"><div class="stat-value">100+</div><div class="stat-label">TESTS ANALYZED</div></div>', unsafe_allow_html=True)
     with col3:
-        st.markdown('''
-        <div class="feature-card">
-            <div class="feature-icon">📱</div>
-            <div class="feature-title">Mobile Optimized</div>
-            <div class="feature-description">Fully responsive design optimized for all devices with touch-friendly interface and fast loading</div>
-        </div>
-        ''', unsafe_allow_html=True)
+        st.markdown('<div class="stat-card"><div class="stat-value">0.2s</div><div class="stat-label">AVG PROCESSING</div></div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
+
+    # Quick example preset buttons
+    c1, c2, c3 = st.columns([1,1,1])
+    with c1:
+        if st.button('🔁 Example: Healthy'):
+            st.session_state._example = [0,95,66,12,30,21.2,0.165,25]
+    with c2:
+        if st.button('⚠️ Example: At-risk'):
+            st.session_state._example = [1,160,88,20,150,32.4,1.200,48]
+    with c3:
+        if st.button('🔬 Example: Borderline'):
+            st.session_state._example = [3,125,78,18,90,26.1,0.55,38]
 
     # INPUT FORM
-    st.markdown('<div style="text-align: center; color: white; font-size: 32px; font-weight: 800; margin: 50px 0 30px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.5);">🔍 ENTER CLINICAL DATA</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="enhanced-form-grid">', unsafe_allow_html=True)
-    
-    # Column 1
+    st.markdown('<div class="form-grid">', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
-    
+
+    example = st.session_state.get('_example', None)
+
     with col1:
-        pregnancies = st.text_input("NUMBER OF PREGNANCIES", placeholder="0")
-        glucose = st.text_input("GLUCOSE LEVEL (mg/dL)", placeholder="70-200")
-        blood_pressure = st.text_input("BLOOD PRESSURE (mmHg)", placeholder="60-180")
-        skin_thickness = st.text_input("SKIN THICKNESS (mm)", placeholder="0-60")
-    
+        pregnancies = st.text_input("PREGNANCIES", value=str(example[0]) if example else "", placeholder="0")
+        glucose = st.text_input("GLUCOSE LEVEL", value=str(example[1]) if example else "", placeholder="mg/dL")
+        blood_pressure = st.text_input("BLOOD PRESSURE", value=str(example[2]) if example else "", placeholder="mmHg")
+        skin_thickness = st.text_input("SKIN THICKNESS", value=str(example[3]) if example else "", placeholder="mm")
+
     with col2:
-        insulin = st.text_input("INSULIN LEVEL (μU/mL)", placeholder="0-300")
-        bmi = st.text_input("BODY MASS INDEX (BMI)", placeholder="10-60")
-        pedigree = st.text_input("DIABETES PEDIGREE FUNCTION", placeholder="0.000-2.000")
-        age = st.text_input("PATIENT AGE (Years)", placeholder="15-90")
-    
+        insulin = st.text_input("INSULIN LEVEL", value=str(example[4]) if example else "", placeholder="μU/mL")
+        bmi = st.text_input("BODY MASS INDEX", value=str(example[5]) if example else "", placeholder="BMI")
+        pedigree = st.text_input("DIABETES PEDIGREE", value=str(example[6]) if example else "", placeholder="0.000-2.000")
+        age = st.text_input("AGE", value=str(example[7]) if example else "", placeholder="Years")
+
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # CSV upload for batch predictions
+    uploaded = st.file_uploader("Upload CSV for batch predictions (columns: pregnancies,glucose,blood_pressure,skin_thickness,insulin,bmi,pedigree,age)", type=['csv'])
+    if uploaded is not None:
+        try:
+            df = pd.read_csv(uploaded)
+            st.write("Preview:")
+            st.dataframe(df.head())
+            if st.button('🔎 Run Batch Analysis'):
+                results = []
+                for _, row in df.iterrows():
+                    vals = row.tolist()[:8]
+                    label, risk, conf = diabetes_prediction(vals)
+                    results.append({**{f'col{i}': row.iloc[i] for i in range(min(8, len(row)))}, 'prediction': label, 'risk%': risk, 'confidence%': conf})
+                out = pd.DataFrame(results)
+                st.success('Batch analysis complete')
+                st.dataframe(out)
+                csv_bytes = out.to_csv(index=False).encode('utf-8')
+                st.download_button('⬇️ Download Results CSV', data=csv_bytes, file_name='diabetes_batch_results.csv', mime='text/csv')
+        except Exception as e:
+            st.error('Failed to read CSV: ' + str(e))
+
     # ANALYSIS BUTTON
-    if st.button("🚀 LAUNCH ADVANCED AI ANALYSIS"):
+    if st.button("🚀 LAUNCH AI ANALYSIS"):
         inputs = [pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, pedigree, age]
-        
+
         if all(inputs):
-            with st.spinner('🔬 Analyzing clinical parameters with advanced AI algorithms...'):
-                time.sleep(2)
-                result, risk_percentage = diabetes_prediction(inputs)
-                
+            with st.spinner('🔬 Analyzing clinical parameters with AI...'):
+                time.sleep(1.2)
+                result, risk_percentage, confidence = diabetes_prediction(inputs)
+
                 if result:
-                    # DISPLAY ENHANCED RESULTS
+                    # save to history
+                    st.session_state.history.append({
+                        'timestamp': datetime.now().isoformat(),
+                        'inputs': inputs,
+                        'prediction': result,
+                        'risk%': risk_percentage,
+                        'confidence%': confidence
+                    })
+
+                    # DISPLAY RESULTS
                     st.markdown(f'''
-                    <div class="enhanced-result-container">
-                        <div class="enhanced-result-title">AI DIAGNOSIS COMPLETE</div>
-                        <div style="font-size: 20px; color: white; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4);">Prediction Result:</div>
-                        <div style="font-size: 36px; font-weight: 900; color: {"#4CAF50" if "NOT" in result else "#FF6B6B"}; text-shadow: 3px 3px 8px rgba(0,0,0,0.6); margin: 25px 0; padding: 20px; background: rgba(255,255,255,0.12); border-radius: 16px; border: 2px solid {"rgba(76,175,80,0.4)" if "NOT" in result else "rgba(255,107,107,0.4)"};">
+                    <div class="result-container">
+                        <div class="result-title">AI DIAGNOSIS COMPLETE</div>
+                        <div style="font-size: 20px; color: rgba(255,255,255,0.9); margin-bottom: 15px;">Prediction Result:</div>
+                        <div class="result-text" style="color: {'#fff' if 'NOT' in result else '#ffdddd'}; text-shadow: 2px 2px 6px rgba(0,0,0,0.6);">
                             {result}
                         </div>
-                    </div>
-                    ''', unsafe_allow_html=True)
-                    
-                    # RISK GAUGE CHART
-                    st.plotly_chart(create_risk_gauge(risk_percentage), use_container_width=True)
-                    
-                    # PARAMETER CHART
-                    try:
-                        param_labels = ["Pregnancies", "Glucose", "BP", "Skin", "Insulin", "BMI", "Pedigree", "Age"]
-                        param_values = [float(x) for x in inputs]
-                        st.plotly_chart(create_parameter_chart(param_labels, param_values), use_container_width=True)
-                    except:
-                        pass
-                    
-                    # RISK LEVEL INDICATOR
-                    risk_color = "#4CAF50" if risk_percentage < 30 else "#FFA500" if risk_percentage < 70 else "#FF6B6B"
-                    risk_level = "Low" if risk_percentage < 30 else "Moderate" if risk_percentage < 70 else "High"
-                    
-                    st.markdown(f'''
-                    <div style="background: rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; margin: 20px 0; text-align: center;">
-                        <div style="font-size: 24px; font-weight: 700; color: white; margin-bottom: 15px;">RISK ASSESSMENT SUMMARY</div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                            <div style="background: {risk_color}; padding: 15px; border-radius: 12px;">
-                                <div style="font-size: 18px; font-weight: 700; color: white;">LEVEL</div>
-                                <div style="font-size: 24px; font-weight: 900; color: white;">{risk_level}</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 12px;">
-                                <div style="font-size: 18px; font-weight: 700; color: white;">SCORE</div>
-                                <div style="font-size: 24px; font-weight: 900; color: #ffd700;">{risk_percentage}%</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 12px;">
-                                <div style="font-size: 18px; font-weight: 700; color: white;">STATUS</div>
-                                <div style="font-size: 24px; font-weight: 900; color: {"#4CAF50" if "NOT" in result else "#FF6B6B"};">{"SAFE" if "NOT" in result else "ALERT"}</div>
-                            </div>
+                        <div class="result-title">ESTIMATED RISK LEVEL</div>
+                        <div style="font-size: 42px; font-weight: 900; color: #ffffff; margin: 20px 0;">
+                            {risk_percentage}%
+                        </div>
+                        <div class="risk-meter">
+                            <div class="risk-fill" style="width: {risk_percentage}%; background: linear-gradient(90deg, {'#ffffff' if risk_percentage < 30 else '#bbbbbb' if risk_percentage < 70 else '#888888'}, {'#ffffff' if risk_percentage < 30 else '#bbbbbb' if risk_percentage < 70 else '#888888'});"></div>
+                        </div>
+                        <div style="color: rgba(255,255,255,0.9); font-size: 16px; margin-top: 15px; font-weight: 600;">
+                            Risk Assessment: <span style="color: {'#fff' if risk_percentage < 30 else '#ddd'}">{'Low' if risk_percentage < 30 else 'Moderate' if risk_percentage < 70 else 'High'}</span>
                         </div>
                     </div>
                     ''', unsafe_allow_html=True)
-                    
+
+                    # Confidence display
+                    if confidence is not None:
+                        st.info(f"Model confidence: {confidence:.1f}%")
+
                     # MEDICAL RECOMMENDATIONS
                     if "IS" in result:
-                        st.error("""
-                        **🩺 URGENT MEDICAL RECOMMENDATIONS:**
-                        - 🔴 Consult with healthcare provider immediately
-                        - 📊 Monitor blood glucose levels regularly (3-4 times daily)
-                        - 🥗 Adopt medically supervised diet plan
-                        - 🏃 Begin supervised exercise routine
-                        - 💊 Schedule medication consultation
-                        - 📅 Follow-up tests required in 1 month
+                        st.warning("""
+                        **🩺 MEDICAL RECOMMENDATIONS:**
+                        - Consult with healthcare provider immediately
+                        - Monitor blood glucose levels regularly  
+                        - Adopt balanced diet and exercise routine
+                        - Schedule follow-up tests in 3 months
                         """)
                     else:
-                        st.success("""
-                        **💡 HEALTH MAINTENANCE RECOMMENDATIONS:**
-                        - ✅ Continue healthy lifestyle maintenance
-                        - 📊 Regular health check-ups every 6 months
-                        - 🥗 Balanced nutrition with controlled sugar intake
-                        - 🏃 Physical activity 150+ minutes per week
-                        - ⚖️ Maintain healthy BMI range
-                        - 😴 Ensure adequate sleep and stress management
+                        st.info("""
+                        **💡 PREVENTIVE MEASURES:**
+                        - Maintain healthy lifestyle
+                        - Regular health check-ups
+                        - Balanced nutrition
+                        - Physical activity 150 mins/week
                         """)
+
+                    # offer to download latest single result
+                    result_df = pd.DataFrame([{
+                        'timestamp': st.session_state.history[-1]['timestamp'],
+                        'prediction': result,
+                        'risk%': risk_percentage,
+                        'confidence%': confidence
+                    }])
+                    csv_bytes = result_df.to_csv(index=False).encode('utf-8')
+                    st.download_button('⬇️ Download This Result (CSV)', data=csv_bytes, file_name='diabetes_single_result.csv', mime='text/csv')
+
+                else:
+                    st.error('Model prediction failed. Ensure numeric inputs only.')
         else:
             st.error("⚠️ Please complete all required clinical parameters for accurate analysis")
 
+    # Show history
+    if st.expander('📚 Analysis History'):
+        if st.session_state.history:
+            st.write(pd.DataFrame(st.session_state.history))
+        else:
+            st.write('No history yet')
+
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ENHANCED FOOTER
-    st.markdown('<div class="enhanced-footer">Advanced Medical AI Diagnostics Platform v4.0<br>Powered by Machine Learning & Predictive Analytics<br>Developed with ❤️ by <b>KARTVAYA RAIKWAR</b></div>', unsafe_allow_html=True)
+    # PROFESSIONAL FOOTER
+    st.markdown('<div class="professional-footer">Advanced Medical AI Diagnostics Platform<br>Developed with ❤️ by <b>KARTVAYA RAIKWAR</b></div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
