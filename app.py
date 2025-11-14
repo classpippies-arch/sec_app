@@ -3,87 +3,67 @@ import pickle
 import streamlit as st
 import os
 
-# --------- Load Model ----------
 model_path = os.path.join(os.path.dirname(__file__), "trained_model.sav")
 with open(model_path, "rb") as file:
     loaded_model = pickle.load(file)
 
-
-# --------- Prediction Function ----------
 def diabetes_prediction(input_data):
     input_data = np.asarray(input_data, dtype=float).reshape(1, -1)
     prediction = loaded_model.predict(input_data)
     return "The person is NOT diabetic" if prediction[0] == 0 else "The person IS diabetic"
 
 
-# --------- Custom Modern UI CSS ----------
-def load_css():
-    st.markdown("""
-        <style>
-        /* Background gradient */
-        .stApp {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            font-family: 'Inter', sans-serif;
-        }
+# ---------------- CSS LIQUID GAS BACKGROUND ----------------
+liquid_css = """
+<style>
+.stApp {
+    background: radial-gradient(circle at 30% 20%, rgba(255,120,10,0.35), transparent 60%),
+                radial-gradient(circle at 70% 80%, rgba(255,175,10,0.30), transparent 60%),
+                linear-gradient(135deg, #111, #1b1b1b);
+}
 
-        /* Title styling */
-        .title {
-            font-size: 42px;
-            font-weight: 800;
-            background: linear-gradient(90deg, #FF7A1A, #ff9b4a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-            padding-bottom: 10px;
-        }
+.bubble {
+    position: fixed;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255,140,40,0.35), rgba(255,140,40,0.05));
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: float 8s ease-in-out infinite;
+    z-index: -1;
+}
 
-        /* Glassmorphism card */
-        .glass-card {
-            backdrop-filter: blur(14px) saturate(140%);
-            -webkit-backdrop-filter: blur(14px) saturate(140%);
-            background-color: rgba(255, 255, 255, 0.35);
-            border-radius: 25px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            animation: fadeIn 0.8s ease-in-out;
-        }
+#b1 { top: 10%; left: 20%; animation-delay: 0s; }
+#b2 { top: 50%; left: 60%; animation-delay: 2s; }
+#b3 { top: 70%; left: 30%; animation-delay: 4s; }
 
-        /* Smooth fade animation */
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
+@keyframes float {
+    0%   { transform: translateY(0px) scale(1); }
+    50%  { transform: translateY(-40px) scale(1.15); }
+    100% { transform: translateY(0px) scale(1); }
+}
 
-        /* Predict Button */
-        .stButton > button {
-            background: linear-gradient(90deg, #FF7A1A, #ff9442);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 15px;
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            transition: 0.2s ease-in-out;
-        }
-        .stButton > button:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 20px rgba(255, 122, 26, 0.4);
-        }
+/* glass card */
+.glassbox {
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.12);
+    border-radius: 22px;
+    padding: 25px;
+    border: 1px solid rgba(255,255,255,0.18);
+}
+</style>
 
-        </style>
-    """, unsafe_allow_html=True)
+<div class="bubble" id="b1"></div>
+<div class="bubble" id="b2"></div>
+<div class="bubble" id="b3"></div>
+"""
 
-
-# --------- Main App ----------
 def main():
-    load_css()
+    st.markdown(liquid_css, unsafe_allow_html=True)
 
-    st.markdown("<div class='title'>🩺 Diabetes Prediction</div>", unsafe_allow_html=True)
+    st.markdown("<h1 style='color:white;text-align:center;'>Diabetes Prediction</h1>", unsafe_allow_html=True)
 
-    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
-
-    st.write("### Enter Patient Details")
+    st.markdown("<div class='glassbox'>", unsafe_allow_html=True)
 
     labels = [
         "Number of Pregnancies","Glucose Level","Blood Pressure",
@@ -94,9 +74,7 @@ def main():
     inputs = [st.text_input(label) for label in labels]
 
     if st.button("Predict"):
-        output = diabetes_prediction(inputs)
-
-        st.success(f"### 🔍 Result: **{output}**")
+        st.success(diabetes_prediction(inputs))
 
     st.markdown("</div>", unsafe_allow_html=True)
 
