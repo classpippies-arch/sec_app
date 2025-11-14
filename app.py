@@ -24,7 +24,7 @@ def diabetes_prediction(input_data):
     return "NOT diabetic" if pred[0] == 0 else "IS diabetic", risk_percentage
 
 
-# ---------- THEME-MATCHED UI CSS --------------
+# ---------- PERFECTLY MATCHED UI CSS --------------
 def load_css():
     st.markdown("""
     <style>
@@ -44,7 +44,7 @@ def load_css():
     }
 
     /* GLASS HEADER */
-    .theme-header {
+    .perfect-header {
         position: fixed;
         top: 0; left: 0;
         width: 100%;
@@ -62,7 +62,7 @@ def load_css():
     }
 
     /* GLASS SIDEBAR */
-    .theme-sidebar {
+    .perfect-sidebar {
         position: fixed;
         top: 70px;
         left: 15px;
@@ -78,7 +78,7 @@ def load_css():
         box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     }
 
-    .theme-sidebar div { 
+    .perfect-sidebar div { 
         margin: 25px 0; 
         font-size: 22px;
         color: white;
@@ -86,13 +86,13 @@ def load_css():
         transition: all 0.3s ease;
     }
     
-    .theme-sidebar div:hover { 
+    .perfect-sidebar div:hover { 
         transform: scale(1.2);
         color: #ffd700;
     }
 
     /* ANIMATED BLOBS */
-    .theme-blob-1 {
+    .perfect-blob-1 {
         position: absolute;
         top: -100px;
         right: -80px;
@@ -105,7 +105,7 @@ def load_css():
         z-index: 1;
     }
     
-    .theme-blob-2 {
+    .perfect-blob-2 {
         position: absolute;
         bottom: -120px;
         left: -100px;
@@ -131,7 +131,7 @@ def load_css():
     }
 
     /* MAIN GLASS CARD */
-    .theme-card {
+    .perfect-card {
         margin: 100px auto;
         margin-left: 110px;
         width: 72%;
@@ -146,7 +146,7 @@ def load_css():
     }
 
     /* BADGE - MATCHING THEME */
-    .theme-badge {
+    .perfect-badge {
         position: relative;
         z-index: 2;
         padding: 12px 24px;
@@ -164,7 +164,7 @@ def load_css():
         text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
 
-    .theme-title {
+    .perfect-title {
         font-size: 38px;
         font-weight: 900;
         z-index: 2; 
@@ -175,7 +175,7 @@ def load_css():
         text-align: center;
     }
 
-    .theme-sub {
+    .perfect-sub {
         color: rgba(255,255,255,0.9);
         margin-bottom: 35px;
         z-index: 2; 
@@ -188,7 +188,7 @@ def load_css():
     }
 
     /* FORM GRID */
-    .theme-grid {
+    .perfect-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 22px 28px;
@@ -197,47 +197,65 @@ def load_css():
         margin-bottom: 30px;
     }
 
-    /* INPUT BOXES MATCHING BACKGROUND THEME */
+    /* PERFECT INPUT BOXES - MATCHING BACKGROUND */
     .stTextInput > div > div {
-        background: rgba(255,255,255,0.08) !important;
-        border: 2px solid rgba(255,255,255,0.3) !important;
-        border-radius: 15px !important;
-        padding: 4px !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1) !important;
+        background: linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3), rgba(240,147,251,0.3)) !important;
+        backdrop-filter: blur(15px) !important;
+        border: 2px solid rgba(255,255,255,0.4) !important;
+        border-radius: 18px !important;
+        padding: 6px !important;
+        transition: all 0.4s ease !important;
+        box-shadow: 
+            0 8px 25px rgba(0,0,0,0.15),
+            inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    }
+
+    .stTextInput > div > div:hover {
+        border-color: rgba(255,255,255,0.7) !important;
+        box-shadow: 
+            0 12px 35px rgba(0,0,0,0.2),
+            inset 0 1px 0 rgba(255,255,255,0.3) !important;
+        transform: translateY(-2px);
     }
 
     .stTextInput > div > div > input {
         background: transparent !important;
         border: none !important;
-        border-radius: 12px !important;
-        padding: 14px 18px !important;
-        font-size: 15px !important;
-        font-weight: 500 !important;
+        border-radius: 14px !important;
+        padding: 16px 20px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
         color: white !important;
+        height: auto !important;
     }
     
     .stTextInput > div > div > input::placeholder {
-        color: rgba(255,255,255,0.6) !important;
-        font-weight: 400 !important;
+        color: rgba(255,255,255,0.7) !important;
+        font-weight: 500 !important;
+        font-size: 15px !important;
     }
     
     .stTextInput > div > div > input:focus {
         outline: none !important;
-        box-shadow: 0 0 0 3px rgba(255,255,255,0.2) !important;
-        background: rgba(255,255,255,0.12) !important;
+        box-shadow: 
+            0 0 0 3px rgba(255,255,255,0.3),
+            inset 0 2px 8px rgba(255,255,255,0.1) !important;
+        background: rgba(255,255,255,0.15) !important;
     }
 
-    /* INPUT LABELS */
+    /* PERFECT INPUT LABELS */
     .stTextInput label {
-        font-weight: 700 !important;
+        font-weight: 800 !important;
         color: white !important;
-        margin-bottom: 10px !important;
-        font-size: 14px !important;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
-        background: linear-gradient(135deg, #ffffff, #e0e0e0);
+        margin-bottom: 12px !important;
+        font-size: 15px !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.4) !important;
+        background: linear-gradient(135deg, #ffffff, #ffd700);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        letter-spacing: 0.5px;
+        display: block;
+        padding-left: 8px;
     }
 
     /* BUTTON MATCHING THEME */
@@ -245,24 +263,25 @@ def load_css():
         background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
         background-size: 200% 200%;
         animation: gradientShift 3s ease infinite;
-        padding: 16px 32px;
+        padding: 18px 32px;
         width: 100%;
-        border-radius: 15px;
+        border-radius: 18px;
         color: white;
         font-weight: 800;
         border: none;
         font-size: 18px;
-        transition: all 0.3s ease;
+        transition: all 0.4s ease;
         box-shadow: 0 12px 35px rgba(102,126,234,0.4);
         text-transform: uppercase;
         letter-spacing: 1.2px;
-        margin-top: 15px;
+        margin-top: 20px;
         text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
     }
     
     .stButton > button:hover {
         transform: translateY(-3px);
-        box-shadow: 0 18px 40px rgba(102,126,234,0.6);
+        box-shadow: 0 20px 45px rgba(102,126,234,0.6);
         background: linear-gradient(135deg, #764ba2, #f093fb, #667eea);
     }
 
@@ -270,122 +289,135 @@ def load_css():
     .risk-meter {
         background: rgba(255,255,255,0.15);
         backdrop-filter: blur(20px);
-        border-radius: 15px;
-        padding: 25px;
+        border-radius: 18px;
+        padding: 30px;
         margin: 25px 0;
-        border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.25);
         text-align: center;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.2);
     }
 
     .risk-title {
-        font-size: 24px;
-        font-weight: 700;
+        font-size: 26px;
+        font-weight: 800;
         color: white;
-        margin-bottom: 15px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
     }
 
     .risk-value {
-        font-size: 42px;
+        font-size: 46px;
         font-weight: 900;
         color: #ffd700;
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
-        margin: 15px 0;
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+        margin: 20px 0;
     }
 
     /* STATS GRID */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        margin: 25px 0;
+        gap: 18px;
+        margin: 30px 0;
     }
 
     .stat-card {
-        background: rgba(255,255,255,0.1);
+        background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25));
         backdrop-filter: blur(15px);
-        border-radius: 12px;
-        padding: 20px;
+        border-radius: 15px;
+        padding: 22px;
         text-align: center;
-        border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.25);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
     }
 
     .stat-value {
-        font-size: 28px;
-        font-weight: 800;
+        font-size: 30px;
+        font-weight: 900;
         color: #ffd700;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
     }
 
     .stat-label {
-        font-size: 12px;
-        color: rgba(255,255,255,0.8);
-        font-weight: 600;
+        font-size: 13px;
+        color: rgba(255,255,255,0.9);
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
 
-    /* THEME FOOTER */
-    .theme-footer {
+    /* PERFECT FOOTER */
+    .perfect-footer {
         text-align: center;
-        margin-top: 40px;
-        color: rgba(255,255,255,0.8);
-        font-size: 16px;
+        margin-top: 45px;
+        color: rgba(255,255,255,0.9);
+        font-size: 17px;
         position: relative;
         z-index: 2;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
         font-weight: 600;
-        padding: 20px;
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(15px);
-        border-radius: 15px;
-        border: 1px solid rgba(255,255,255,0.2);
+        padding: 25px;
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(20px);
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.25);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    .theme-footer b {
-        background: linear-gradient(135deg, #ffd700, #ffa500);
+    .perfect-footer b {
+        background: linear-gradient(135deg, #ffd700, #ffa500, #ff8c00);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 800;
-        font-size: 18px;
+        font-weight: 900;
+        font-size: 19px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
 
     /* EXPANDER STYLING */
     .streamlit-expanderHeader {
-        background: rgba(255,255,255,0.1) !important;
+        background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)) !important;
         backdrop-filter: blur(15px) !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        border-radius: 12px !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+        border-radius: 15px !important;
         color: white !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
     }
 
     .streamlit-expanderContent {
-        background: rgba(255,255,255,0.05) !important;
-        backdrop-filter: blur(10px) !important;
-        border-radius: 0 0 12px 12px !important;
+        background: rgba(255,255,255,0.08) !important;
+        backdrop-filter: blur(15px) !important;
+        border-radius: 0 0 15px 15px !important;
         border: 1px solid rgba(255,255,255,0.2) !important;
         border-top: none !important;
     }
 
     /* SELECT BOX STYLING */
     .stSelectbox > div > div {
-        background: rgba(255,255,255,0.08) !important;
-        border: 2px solid rgba(255,255,255,0.3) !important;
-        border-radius: 12px !important;
+        background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)) !important;
+        backdrop-filter: blur(15px) !important;
+        border: 2px solid rgba(255,255,255,0.4) !important;
+        border-radius: 15px !important;
     }
 
     .stSelectbox > div > div > div {
         color: white !important;
+        font-weight: 600 !important;
     }
 
     /* RESPONSIVE DESIGN */
     @media (max-width: 900px) {
-        .theme-card { 
+        .perfect-card { 
             width: 85%; 
             margin-left: 90px; 
         }
-        .theme-grid { 
+        .perfect-grid { 
             grid-template-columns: 1fr; 
         }
         .stats-grid {
@@ -394,12 +426,12 @@ def load_css():
     }
     
     @media (max-width: 768px) {
-        .theme-card { 
+        .perfect-card { 
             width: 90%; 
             margin-left: 20px;
             margin-right: 20px;
         }
-        .theme-sidebar {
+        .perfect-sidebar {
             display: none;
         }
         .stats-grid {
@@ -409,12 +441,12 @@ def load_css():
 
     </style>
 
-    <div class="theme-header">
+    <div class="perfect-header">
         <div>🏥 DIABETES AI DIAGNOSTIC SUITE</div>
         <div>v2.1 | MEDICAL GRADE</div>
     </div>
 
-    <div class="theme-sidebar">
+    <div class="perfect-sidebar">
         <div>⚡</div>
         <div>🔍</div>
         <div>📊</div>
@@ -429,17 +461,17 @@ def main():
     load_css()
 
     # MAIN CARD
-    st.markdown('<div class="theme-card">', unsafe_allow_html=True)
+    st.markdown('<div class="perfect-card">', unsafe_allow_html=True)
 
     # Animated blobs
-    st.markdown('<div class="theme-blob-1"></div>', unsafe_allow_html=True)
-    st.markdown('<div class="theme-blob-2"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="perfect-blob-1"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="perfect-blob-2"></div>', unsafe_allow_html=True)
 
-    # THEME-MATCHED BADGE
-    st.markdown('<div class="theme-badge">🎯 AI DIAGNOSTIC TOOL v2.1</div>', unsafe_allow_html=True)
+    # PERFECT BADGE
+    st.markdown('<div class="perfect-badge">🎯 AI DIAGNOSTIC TOOL v2.1</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="theme-title">DIABETES RISK ASSESSMENT</div>', unsafe_allow_html=True)
-    st.markdown('<div class="theme-sub">Enter patient clinical parameters for comprehensive diabetes assessment and AI-powered health analysis</div>', unsafe_allow_html=True)
+    st.markdown('<div class="perfect-title">DIABETES RISK ASSESSMENT</div>', unsafe_allow_html=True)
+    st.markdown('<div class="perfect-sub">Enter patient clinical parameters for comprehensive diabetes assessment and AI-powered health analysis</div>', unsafe_allow_html=True)
 
     # STATISTICS CARDS
     st.markdown('<div class="stats-grid">', unsafe_allow_html=True)
@@ -454,15 +486,15 @@ def main():
     with col3:
         st.markdown('<div class="stat-card"><div class="stat-value">0.3s</div><div class="stat-label">AVG PROCESSING</div></div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="theme-grid">', unsafe_allow_html=True)
+    st.markdown('<div class="perfect-grid">', unsafe_allow_html=True)
     
-    # Column 1
+    # Column 1 - Beautiful gradient input boxes
     p = st.text_input("PREGNANCIES COUNT", placeholder="Enter number...")
     g = st.text_input("GLUCOSE LEVEL", placeholder="mg/dL (70-200)")
     bp = st.text_input("BLOOD PRESSURE", placeholder="mmHg (60-180)")
     stn = st.text_input("SKIN THICKNESS", placeholder="mm (0-60)")
     
-    # Column 2  
+    # Column 2 - Beautiful gradient input boxes
     ins = st.text_input("INSULIN LEVEL", placeholder="μU/mL (0-300)")
     bmi = st.text_input("BODY MASS INDEX", placeholder="BMI (10-60)")
     dpf = st.text_input("PEDIGREE FUNCTION", placeholder="0.00 - 2.50")
@@ -491,17 +523,17 @@ def main():
                     st.markdown(f'''
                     <div class="risk-meter">
                         <div class="risk-title">AI DIAGNOSIS COMPLETE</div>
-                        <div style="font-size: 20px; color: white; margin-bottom: 10px;">Prediction Result:</div>
-                        <div style="font-size: 28px; font-weight: 800; color: {"#4CAF50" if "NOT" in result else "#FF6B6B"}; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin: 15px 0;">
+                        <div style="font-size: 22px; color: white; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">Prediction Result:</div>
+                        <div style="font-size: 32px; font-weight: 900; color: {"#4CAF50" if "NOT" in result else "#FF6B6B"}; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); margin: 20px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 12px;">
                             {result}
                         </div>
                         <div class="risk-title">ESTIMATED RISK LEVEL</div>
                         <div class="risk-value">{risk_percentage}%</div>
-                        <div style="background: rgba(255,255,255,0.2); height: 20px; border-radius: 10px; margin: 15px 0; overflow: hidden;">
-                            <div style="height: 100%; background: linear-gradient(90deg, {"#4CAF50" if risk_percentage < 30 else "#FFA500" if risk_percentage < 70 else "#FF6B6B"}, {"#4CAF50" if risk_percentage < 30 else "#FFA500" if risk_percentage < 70 else "#FF6B6B"}); width: {risk_percentage}%; transition: width 1s ease;"></div>
+                        <div style="background: rgba(255,255,255,0.2); height: 24px; border-radius: 12px; margin: 20px 0; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                            <div style="height: 100%; background: linear-gradient(90deg, {"#4CAF50" if risk_percentage < 30 else "#FFA500" if risk_percentage < 70 else "#FF6B6B"}, {"#4CAF50" if risk_percentage < 30 else "#FFA500" if risk_percentage < 70 else "#FF6B6B"}); width: {risk_percentage}%; transition: width 1s ease; border-radius: 12px;"></div>
                         </div>
-                        <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 10px;">
-                            Risk Assessment: {"Low" if risk_percentage < 30 else "Moderate" if risk_percentage < 70 else "High"}
+                        <div style="color: rgba(255,255,255,0.9); font-size: 16px; margin-top: 15px; font-weight: 600;">
+                            Risk Assessment: <span style="color: {"#4CAF50" if risk_percentage < 30 else "#FFA500" if risk_percentage < 70 else "#FF6B6B"}">{"Low" if risk_percentage < 30 else "Moderate" if risk_percentage < 70 else "High"}</span>
                         </div>
                     </div>
                     ''', unsafe_allow_html=True)
@@ -528,20 +560,20 @@ def main():
 
     # HEALTH TIPS SECTION
     st.markdown("---")
-    st.markdown('<div style="color: white; font-size: 24px; font-weight: 700; text-align: center; margin: 25px 0;">💡 HEALTH & WELLNESS TIPS</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: white; font-size: 26px; font-weight: 800; text-align: center; margin: 30px 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.4);">💡 HEALTH & WELLNESS TIPS</div>', unsafe_allow_html=True)
     
     tip_col1, tip_col2, tip_col3 = st.columns(3)
     with tip_col1:
-        st.markdown('<div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);"><div style="font-size: 16px; color: #ffd700; font-weight: 700;">🥗 Nutrition</div><div style="color: white; font-size: 13px; margin-top: 8px;">Focus on fiber-rich foods and limit processed sugars</div></div>', unsafe_allow_html=True)
+        st.markdown('<div style="background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)); backdrop-filter: blur(15px); padding: 22px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 8px 25px rgba(0,0,0,0.15);"><div style="font-size: 18px; color: #ffd700; font-weight: 800; margin-bottom: 10px;">🥗 Nutrition</div><div style="color: white; font-size: 14px; line-height: 1.5;">Focus on fiber-rich foods, limit processed sugars, and maintain balanced meals</div></div>', unsafe_allow_html=True)
     with tip_col2:
-        st.markdown('<div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);"><div style="font-size: 16px; color: #ffd700; font-weight: 700;">🏃 Exercise</div><div style="color: white; font-size: 13px; margin-top: 8px;">150 minutes of moderate activity per week recommended</div></div>', unsafe_allow_html=True)
+        st.markdown('<div style="background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)); backdrop-filter: blur(15px); padding: 22px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 8px 25px rgba(0,0,0,0.15);"><div style="font-size: 18px; color: #ffd700; font-weight: 800; margin-bottom: 10px;">🏃 Exercise</div><div style="color: white; font-size: 14px; line-height: 1.5;">150 minutes of moderate activity per week recommended for optimal health</div></div>', unsafe_allow_html=True)
     with tip_col3:
-        st.markdown('<div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);"><div style="font-size: 16px; color: #ffd700; font-weight: 700;">📊 Monitoring</div><div style="color: white; font-size: 13px; margin-top: 8px;">Regular health check-ups help in early detection</div></div>', unsafe_allow_html=True)
+        st.markdown('<div style="background: linear-gradient(135deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25)); backdrop-filter: blur(15px); padding: 22px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 8px 25px rgba(0,0,0,0.15);"><div style="font-size: 18px; color: #ffd700; font-weight: 800; margin-bottom: 10px;">📊 Monitoring</div><div style="color: white; font-size: 14px; line-height: 1.5;">Regular health check-ups and glucose monitoring help in early detection</div></div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # THEME-MATCHED FOOTER
-    st.markdown('<div class="theme-footer">Advanced Medical AI Diagnostics Platform<br>Developed with ❤️ by <b>KARTVAYA RAIKWAR</b></div>', unsafe_allow_html=True)
+    # PERFECT FOOTER
+    st.markdown('<div class="perfect-footer">Advanced Medical AI Diagnostics Platform<br>Developed with ❤️ by <b>KARTVAYA RAIKWAR</b></div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
