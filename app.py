@@ -203,8 +203,7 @@ def load_css():
                 </svg>
             </div>
             <div>
-                <div class="header-title">DIABETES RISK — FUTURE VIEW</div>
-                <div class="header-sub">Monochrome liquid-glass UI • Animated background</div>
+                <div class="header-title">DIABETES RISK ASSESSMENT</div>
             </div>
         </div>
         <div style="text-align:right">
