@@ -4,6 +4,7 @@ import os
 import time
 from datetime import datetime
 import pandas as pd
+import streamlit as st  # <-- added to fix NameError: 'st' is not defined
 
 # Optional Plotly imports (guarded to avoid ModuleNotFoundError on platforms without plotly)
 try:
