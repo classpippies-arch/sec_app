@@ -293,7 +293,7 @@ def main():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="medical-footer">Developed by <b>Medical AI Research Team</b> | Secure & Confidential</div>', unsafe_allow_html=True)
+    st.markdown('<div class="medical-footer">Developed by <b>Kartvaya Raikwar</b></div>', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
