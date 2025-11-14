@@ -216,9 +216,11 @@ def main():
     # initialize session history
     if 'history' not in st.session_state:
         st.session_state.history = []
-
     # Load professional CSS (futuristic liquid glass)
     load_css()
+
+    # DEBUG BANNER (temporary) - visible marker to ensure app renders despite heavy CSS
+    st.markdown('<div style="position:relative; z-index:9999; color:#fff; font-weight:900; padding:10px 18px; background:rgba(0,0,0,0.35); border-radius:8px; margin-bottom:12px">🔧 App loaded — if you see a blank page, disable the liquid background in load_css()</div>', unsafe_allow_html=True)
 
     # MAIN CONTENT CARD
     st.markdown('<div class="professional-card">', unsafe_allow_html=True)
